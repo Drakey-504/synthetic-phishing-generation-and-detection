@@ -11,8 +11,8 @@ Synthetic Phishing Generation and Detection Project for AI Applications in Infor
  
 1. Clone the repository:
    ```bash
-   git clone <your-repo-url>
-   cd <your-repo-name>
+   git clone https://github.com/Drakey-504/synthetic-phishing-generation-and-detection.git
+   cd synthetic-phishing-generation-and-detection
    ```
  
 2. Create the conda environment from the lockfile:
