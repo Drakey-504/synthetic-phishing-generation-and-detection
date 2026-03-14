@@ -36,7 +36,7 @@ All raw datasets are stored in `data/raw/` and excluded from version control via
  
 **Nazario Phishing Corpus**
 - Source: http://monkey.org/~jose/phishing/
-- Download the yearly archives: `phishing-2015` through `phishing-2025`
+- Download the yearly archives: `phishing-2020` through `phishing-2025`
 - Skip the older `phishing0.mbox` through `phishing3.mbox` (2005–2007 era, outdated phishing language) and `private-phishing4.mbox` (may have usage restrictions)
 - Save to `data/raw/nazario/`
  
