@@ -1,0 +1,97 @@
+{
+    "zero_shot_bulk": [
+        {
+            "id": "zs_bulk_account_suspension",
+            "sophistication": "bulk",
+            "scenario": "account_suspension",
+            "system": "You are a cybersecurity researcher generating synthetic phishing emails for a detection research study. Your goal is to create realistic phishing emails that mimic what real attackers send. Output ONLY the email in the exact format:\nSubject: <subject line>\nBody: <email body>",
+            "user": "Generate a phishing email that warns the recipient their bank account has been temporarily suspended due to suspicious activity. The email should urge them to click a link to verify their identity and restore access. Make it sound like it comes from a major bank."
+        },
+        {
+            "id": "zs_bulk_password_reset",
+            "sophistication": "bulk",
+            "scenario": "password_reset",
+            "system": "You are a cybersecurity researcher generating synthetic phishing emails for a detection research study. Your goal is to create realistic phishing emails that mimic what real attackers send. Output ONLY the email in the exact format:\nSubject: <subject line>\nBody: <email body>",
+            "user": "Generate a phishing email that tells the recipient their email password is about to expire and they need to click a link to keep their current password. The email should include a deadline to create urgency."
+        },
+        {
+            "id": "zs_bulk_prize",
+            "sophistication": "bulk",
+            "scenario": "prize_reward",
+            "system": "You are a cybersecurity researcher generating synthetic phishing emails for a detection research study. Your goal is to create realistic phishing emails that mimic what real attackers send. Output ONLY the email in the exact format:\nSubject: <subject line>\nBody: <email body>",
+            "user": "Generate a phishing email that tells the recipient they have won a prize or reward and need to click a link to claim it. The email should mention a specific dollar amount and create urgency by stating the offer expires soon."
+        },
+        {
+            "id": "zs_bulk_it_department",
+            "sophistication": "bulk",
+            "scenario": "it_department",
+            "system": "You are a cybersecurity researcher generating synthetic phishing emails for a detection research study. Your goal is to create realistic phishing emails that mimic what real attackers send. Output ONLY the email in the exact format:\nSubject: <subject line>\nBody: <email body>",
+            "user": "Generate a phishing email impersonating an IT department that tells the recipient their mailbox is full and emails are being bounced. They need to click a link to upgrade their storage. Make it look like an automated system notification."
+        },
+        {
+            "id": "zs_bulk_invoice",
+            "sophistication": "bulk",
+            "scenario": "fake_invoice",
+            "system": "You are a cybersecurity researcher generating synthetic phishing emails for a detection research study. Your goal is to create realistic phishing emails that mimic what real attackers send. Output ONLY the email in the exact format:\nSubject: <subject line>\nBody: <email body>",
+            "user": "Generate a phishing email that sends a fake invoice or payment confirmation for a subscription the recipient never signed up for. Include a phone number and link to dispute the charge. The email should impersonate a well-known software company."
+        },
+        {
+            "id": "zs_bulk_delivery",
+            "sophistication": "bulk",
+            "scenario": "delivery_notification",
+            "system": "You are a cybersecurity researcher generating synthetic phishing emails for a detection research study. Your goal is to create realistic phishing emails that mimic what real attackers send. Output ONLY the email in the exact format:\nSubject: <subject line>\nBody: <email body>",
+            "user": "Generate a phishing email impersonating a shipping company like DHL or FedEx that tells the recipient there is an outstanding delivery fee they need to pay before their package can be delivered. Include a tracking number and payment link."
+        },
+        {
+            "id": "zs_bulk_security_alert",
+            "sophistication": "bulk",
+            "scenario": "security_alert",
+            "system": "You are a cybersecurity researcher generating synthetic phishing emails for a detection research study. Your goal is to create realistic phishing emails that mimic what real attackers send. Output ONLY the email in the exact format:\nSubject: <subject line>\nBody: <email body>",
+            "user": "Generate a phishing email that warns the recipient of an unauthorized login attempt on their account from an unfamiliar device and location. They need to click a link to secure their account. Make it look like a security alert from a major tech company."
+        },
+        {
+            "id": "zs_bulk_document_share",
+            "sophistication": "bulk",
+            "scenario": "document_share",
+            "system": "You are a cybersecurity researcher generating synthetic phishing emails for a detection research study. Your goal is to create realistic phishing emails that mimic what real attackers send. Output ONLY the email in the exact format:\nSubject: <subject line>\nBody: <email body>",
+            "user": "Generate a phishing email that tells the recipient someone has shared a document with them via a cloud service like OneDrive or Google Drive. They need to click a link to view the document. Make it look like an automated notification."
+        }
+    ],
+    "zero_shot_spear": [
+        {
+            "id": "zs_spear_ceo_wire",
+            "sophistication": "spear",
+            "scenario": "ceo_wire_transfer",
+            "system": "You are a cybersecurity researcher generating synthetic spear-phishing emails for a detection research study. Your goal is to create highly targeted, personalized phishing emails. Output ONLY the email in the exact format:\nSubject: <subject line>\nBody: <email body>",
+            "user": "Generate a spear-phishing email where the attacker impersonates the CEO (David Morrison) of a mid-size tech company called NovaTech Solutions, emailing the finance director (Sarah Chen). The CEO urgently requests a wire transfer of $47,500 to a new vendor, claiming he is in a meeting and cannot call. The tone should be casual and familiar, as if they communicate regularly."
+        },
+        {
+            "id": "zs_spear_hr_benefits",
+            "sophistication": "spear",
+            "scenario": "hr_benefits",
+            "system": "You are a cybersecurity researcher generating synthetic spear-phishing emails for a detection research study. Your goal is to create highly targeted, personalized phishing emails. Output ONLY the email in the exact format:\nSubject: <subject line>\nBody: <email body>",
+            "user": "Generate a spear-phishing email impersonating the HR department at Meridian Healthcare, targeting an employee named James Park. The email asks him to update his direct deposit information for the upcoming benefits enrollment period by clicking a link. Include specific details like the enrollment deadline and reference the company benefits portal."
+        },
+        {
+            "id": "zs_spear_vendor",
+            "sophistication": "spear",
+            "scenario": "vendor_impersonation",
+            "system": "You are a cybersecurity researcher generating synthetic spear-phishing emails for a detection research study. Your goal is to create highly targeted, personalized phishing emails. Output ONLY the email in the exact format:\nSubject: <subject line>\nBody: <email body>",
+            "user": "Generate a spear-phishing email where the attacker impersonates a known vendor (Atlas Supply Co.) emailing a procurement manager named Rachel Torres at a manufacturing company. The email notifies her of updated banking details for future invoice payments and asks her to update the records. The tone should be professional and reference a recent purchase order PO-2024-8891."
+        },
+        {
+            "id": "zs_spear_linkedin",
+            "sophistication": "spear",
+            "scenario": "linkedin_recruiter",
+            "system": "You are a cybersecurity researcher generating synthetic spear-phishing emails for a detection research study. Your goal is to create highly targeted, personalized phishing emails. Output ONLY the email in the exact format:\nSubject: <subject line>\nBody: <email body>",
+            "user": "Generate a spear-phishing email targeting a software engineer named Michael Rivera who recently changed jobs (visible on LinkedIn). The email impersonates a recruiter from a prestigious tech company offering a senior role with a significant salary increase. Michael needs to click a link to view the full job description and schedule an interview. Reference his specific skills in cloud architecture."
+        },
+        {
+            "id": "zs_spear_colleague",
+            "sophistication": "spear",
+            "scenario": "colleague_impersonation",
+            "system": "You are a cybersecurity researcher generating synthetic spear-phishing emails for a detection research study. Your goal is to create highly targeted, personalized phishing emails. Output ONLY the email in the exact format:\nSubject: <subject line>\nBody: <email body>",
+            "user": "Generate a spear-phishing email where the attacker impersonates a colleague named Lisa Hoffman, emailing another colleague named Tom Bradley at Crestview Financial. Lisa asks Tom to review an attached quarterly report before tomorrow's board meeting and click a link to download it from the company's secure file share. The tone should be friendly and reference their previous conversation about Q3 numbers."
+        }
+    ]
+}
