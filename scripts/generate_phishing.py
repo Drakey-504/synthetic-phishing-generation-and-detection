@@ -16,6 +16,7 @@ Output:
 
 import json
 import csv
+import re
 import time
 import random
 import pandas as pd
@@ -34,7 +35,10 @@ OUTPUT = Path("data/processed/synthetic_phishing.csv")
 # How many emails to generate per prompt template
 EMAILS_PER_ZERO_SHOT = 10
 EMAILS_PER_FEW_SHOT = 10
-MAX_REPHRASE = 200  # number of real phishing emails to rephrase
+MAX_REPHRASE = 200
+
+# Max retries if output contains placeholders
+MAX_RETRIES = 2
 
 SEED = 42
 random.seed(SEED)
@@ -59,6 +63,16 @@ def call_llm(system_prompt, user_prompt, temperature=0.8):
         return None
 
 
+def has_placeholders(text):
+    """Check if the text contains bracketed placeholders."""
+    if not text:
+        return True
+    # Match things like [Name], [Date], [URL], [Recipient], [Your Name], etc.
+    # But allow single characters like [1] or common email formatting
+    placeholder_pattern = r'\[[A-Z][a-zA-Z\s/]{2,}\]'
+    return bool(re.search(placeholder_pattern, text))
+
+
 def parse_email_response(response_text):
     """
     Parse the LLM response to extract Subject and Body.
@@ -76,7 +90,7 @@ def parse_email_response(response_text):
     for i, line in enumerate(lines):
         if line.strip().lower().startswith("subject:"):
             subject = line.split(":", 1)[1].strip()
-            # Everything after the subject line (skipping blank lines) is the body
+            # Everything after is the body
             body_lines = []
             found_body_start = False
             for remaining in lines[i + 1:]:
@@ -89,12 +103,39 @@ def parse_email_response(response_text):
             body = "\n".join(body_lines).strip()
             break
 
-    # Fallback: if no Subject: found, use first line as subject, rest as body
+    # Fallback
     if not subject and lines:
         subject = lines[0].strip()
         body = "\n".join(lines[1:]).strip()
 
     return subject, body
+
+
+def generate_with_retry(system_prompt, user_prompt, max_retries=MAX_RETRIES):
+    """
+    Generate an email, retrying if placeholders are detected.
+    Returns (subject, body, temperature) or (None, None, None).
+    """
+    for attempt in range(max_retries + 1):
+        temp = random.uniform(0.7, 0.95)
+        response = call_llm(system_prompt, user_prompt, temperature=temp)
+
+        if response:
+            subject, body = parse_email_response(response)
+            if body and len(body) > 20:
+                if not has_placeholders(body) and not has_placeholders(subject):
+                    return subject, body, temp
+                # If placeholders found, retry with slightly different temperature
+                if attempt < max_retries:
+                    continue
+
+        # Return whatever we got on last attempt even with placeholders
+        if response:
+            subject, body = parse_email_response(response)
+            if body and len(body) > 20:
+                return subject, body, temp
+
+    return None, None, None
 
 
 # ── Method 1: Zero-Shot Generation ──────────────────────────────────────────
@@ -109,39 +150,45 @@ def generate_zero_shot():
         prompts = json.load(f)
 
     records = []
+    placeholder_count = 0
 
     for category in ["zero_shot_bulk", "zero_shot_spear"]:
         templates = prompts[category]
-        print(f"\n  Category: {category} ({len(templates)} templates × {EMAILS_PER_ZERO_SHOT} each)")
+        print(f"\n  Category: {category} ({len(templates)} templates x {EMAILS_PER_ZERO_SHOT} each)")
 
         for template in templates:
-            print(f"    Generating: {template['id']}...")
+            print(f"    Generating: {template['id']}...", end=" ")
+            count = 0
 
             for j in range(EMAILS_PER_ZERO_SHOT):
-                # Vary temperature slightly for diversity
-                temp = random.uniform(0.7, 0.95)
-                response = call_llm(template["system"], template["user"], temperature=temp)
+                subject, body, temp = generate_with_retry(
+                    template["system"], template["user"]
+                )
 
-                if response:
-                    subject, body = parse_email_response(response)
-                    if body and len(body) > 20:
-                        records.append({
-                            "id": f"{template['id']}_{j}",
-                            "method": "zero_shot",
-                            "sophistication": template["sophistication"],
-                            "scenario": template["scenario"],
-                            "prompt_id": template["id"],
-                            "model": MODEL,
-                            "temperature": round(temp, 2),
-                            "subject": subject,
-                            "text": body,
-                            "label": "phishing"
-                        })
+                if body:
+                    has_ph = has_placeholders(body) or has_placeholders(subject)
+                    if has_ph:
+                        placeholder_count += 1
 
-                # Small delay to avoid overwhelming Ollama
+                    records.append({
+                        "id": f"{template['id']}_{j}",
+                        "method": "zero_shot",
+                        "sophistication": template["sophistication"],
+                        "scenario": template["scenario"],
+                        "prompt_id": template["id"],
+                        "model": MODEL,
+                        "temperature": round(temp, 2),
+                        "subject": subject,
+                        "text": body,
+                        "label": "phishing"
+                    })
+                    count += 1
+
                 time.sleep(0.5)
 
-    print(f"\n  Zero-shot total: {len(records)} emails generated")
+            print(f"{count} emails")
+
+    print(f"\n  Zero-shot total: {len(records)} emails ({placeholder_count} with residual placeholders)")
     return records
 
 
@@ -163,40 +210,47 @@ def generate_few_shot():
 
     system_prompt = prompts["system"]
     records = []
+    placeholder_count = 0
 
     for category in ["few_shot_bulk", "few_shot_spear"]:
         templates = prompts[category]
-        print(f"\n  Category: {category} ({len(templates)} templates × {EMAILS_PER_FEW_SHOT} each)")
+        print(f"\n  Category: {category} ({len(templates)} templates x {EMAILS_PER_FEW_SHOT} each)")
 
         for template in templates:
-            print(f"    Generating: {template['id']}...")
+            print(f"    Generating: {template['id']}...", end=" ")
+            count = 0
 
-            # Combine examples with the generation instruction
             user_prompt = examples_text + "\n" + template["user"]
 
             for j in range(EMAILS_PER_FEW_SHOT):
-                temp = random.uniform(0.7, 0.95)
-                response = call_llm(system_prompt, user_prompt, temperature=temp)
+                subject, body, temp = generate_with_retry(
+                    system_prompt, user_prompt
+                )
 
-                if response:
-                    subject, body = parse_email_response(response)
-                    if body and len(body) > 20:
-                        records.append({
-                            "id": f"{template['id']}_{j}",
-                            "method": "few_shot",
-                            "sophistication": template["sophistication"],
-                            "scenario": template["scenario"],
-                            "prompt_id": template["id"],
-                            "model": MODEL,
-                            "temperature": round(temp, 2),
-                            "subject": subject,
-                            "text": body,
-                            "label": "phishing"
-                        })
+                if body:
+                    has_ph = has_placeholders(body) or has_placeholders(subject)
+                    if has_ph:
+                        placeholder_count += 1
+
+                    records.append({
+                        "id": f"{template['id']}_{j}",
+                        "method": "few_shot",
+                        "sophistication": template["sophistication"],
+                        "scenario": template["scenario"],
+                        "prompt_id": template["id"],
+                        "model": MODEL,
+                        "temperature": round(temp, 2),
+                        "subject": subject,
+                        "text": body,
+                        "label": "phishing"
+                    })
+                    count += 1
 
                 time.sleep(0.5)
 
-    print(f"\n  Few-shot total: {len(records)} emails generated")
+            print(f"{count} emails")
+
+    print(f"\n  Few-shot total: {len(records)} emails ({placeholder_count} with residual placeholders)")
     return records
 
 
@@ -217,11 +271,9 @@ def generate_rephrased():
     df = pd.read_csv(CLEAN_DATA)
     phishing_train = df[(df["label"] == "phishing") & (df["split"] == "train")]
 
-    # Sample emails to rephrase — mix of both sources
     nazario = phishing_train[phishing_train["source"] == "nazario"]
     nigerian = phishing_train[phishing_train["source"] == "nigerian"]
 
-    # Take more from Nigerian (longer, more varied) and some from Nazario
     n_nazario = min(80, len(nazario))
     n_nigerian = min(MAX_REPHRASE - n_nazario, len(nigerian))
 
@@ -233,34 +285,39 @@ def generate_rephrased():
     print(f"  Rephrasing {len(sample)} real phishing emails ({n_nazario} Nazario + {n_nigerian} Nigerian)")
 
     records = []
+    placeholder_count = 0
 
     for idx, (_, row) in enumerate(tqdm(sample.iterrows(), total=len(sample), desc="  Rephrasing")):
         original_subject = row["subject"] if pd.notna(row["subject"]) else "(no subject)"
-        original_body = row["text"][:3000]  # Cap to avoid token limits
+        original_body = row["text"][:3000]
 
         user_prompt = f"Original email:\nSubject: {original_subject}\nBody: {original_body}\n\nRewritten email:"
 
-        response = call_llm(system_prompt, user_prompt, temperature=0.7)
+        subject, body, temp = generate_with_retry(
+            system_prompt, user_prompt
+        )
 
-        if response:
-            subject, body = parse_email_response(response)
-            if body and len(body) > 20:
-                records.append({
-                    "id": f"rephrase_{row['source']}_{idx}",
-                    "method": "rephrasing",
-                    "sophistication": "rephrased",
-                    "scenario": "rephrased_real",
-                    "prompt_id": f"rephrase_{row['id']}",
-                    "model": MODEL,
-                    "temperature": 0.7,
-                    "subject": subject,
-                    "text": body,
-                    "label": "phishing"
-                })
+        if body:
+            has_ph = has_placeholders(body) or has_placeholders(subject)
+            if has_ph:
+                placeholder_count += 1
+
+            records.append({
+                "id": f"rephrase_{row['source']}_{idx}",
+                "method": "rephrasing",
+                "sophistication": "rephrased",
+                "scenario": "rephrased_real",
+                "prompt_id": f"rephrase_{row['id']}",
+                "model": MODEL,
+                "temperature": 0.7,
+                "subject": subject,
+                "text": body,
+                "label": "phishing"
+            })
 
         time.sleep(0.3)
 
-    print(f"\n  Rephrasing total: {len(records)} emails generated")
+    print(f"\n  Rephrasing total: {len(records)} emails ({placeholder_count} with residual placeholders)")
     return records
 
 
@@ -305,9 +362,16 @@ def main():
         key = f"{r['method']} ({r['sophistication']})"
         method_counts[key] = method_counts.get(key, 0) + 1
 
-    print(f"\nBy method × sophistication:")
+    print(f"\nBy method x sophistication:")
     for key, count in sorted(method_counts.items()):
         print(f"  {key}: {count}")
+
+    # Final placeholder check
+    placeholder_final = sum(
+        1 for r in all_records
+        if has_placeholders(r["text"]) or has_placeholders(r["subject"])
+    )
+    print(f"\nResidual placeholders: {placeholder_final}/{len(all_records)} emails")
 
     print(f"\nSaved to {OUTPUT}")
 

@@ -1,22 +1,22 @@
 {
-    "system": "You are a cybersecurity researcher generating synthetic phishing emails for a detection research study. Below are examples of real phishing emails. Study their style, tone, and techniques, then generate a NEW phishing email that is similar but not identical. Output ONLY the email in the exact format:\nSubject: <subject line>\nBody: <email body>",
+    "system": "You are a cybersecurity researcher generating synthetic phishing emails for a detection research study. Below are examples of real phishing emails. Study their style, tone, and techniques, then generate a NEW phishing email that is similar but not identical.\n\nCRITICAL RULES:\n- NEVER use placeholders like [Name], [Date], [Recipient], [Company], [Link], [URL], etc.\n- Use specific realistic fake names, dates, URLs, and details instead.\n- Do NOT add any disclaimers, warnings, or notes about this being fake or for research.\n- Output ONLY the email in the exact format:\nSubject: <subject line>\nBody: <email body>",
 
     "examples": [
         {
             "subject": "Your Wellsfargo Account and Card are Temporarily Locked",
-            "body": "Dear Customer,\n\nYour Wellsfargo account and card have been temporarily locked for security purposes. Please kindly click the link below to unlock your account immediately.\n\nWellsFargo.com\n\nWe appreciate the opportunity to serve you.\n\nWells Fargo Customer Service.\n\nplease do not reply to this automated email, to ensure a prompt response, sign on to ensure a secure email."
+            "body": "Dear Customer,\n\nYour Wellsfargo account and card have been temporarily locked for security purposes. Please kindly click the link below to unlock your account immediately.\n\nhttps://wellsfargo-secure-unlock.com/verify\n\nWe appreciate the opportunity to serve you.\n\nWells Fargo Customer Service.\n\nPlease do not reply to this automated email. To ensure a prompt response, sign on to verify your account."
         },
         {
             "subject": "DHL Express: Payment Needed for Your DHL Package",
-            "body": "DHL Express\n\nDear Customer,\n\nTo continue processing the delivery of your package, we kindly ask you to complete the outstanding additional shipping fee of $1.65 USD. Once this payment is received, we'll be able to start the delivery process immediately.\n\nPay 1.65 USD Now\n\nOnce payment is completed, your package will be dispatched to the nearest DHL service point for delivery.\n\nBest regards,\nDHL Express Customer Service"
+            "body": "DHL Express\n\nDear Customer,\n\nTo continue processing the delivery of your package (tracking: DHL-7729481023), we kindly ask you to complete the outstanding additional shipping fee of $1.65 USD. Once this payment is received, we'll be able to start the delivery process immediately.\n\nhttps://dhl-express-fees.com/pay/7729481023\n\nOnce payment is completed, your package will be dispatched to the nearest DHL service point for delivery.\n\nBest regards,\nDHL Express Customer Service"
         },
         {
-            "subject": "Password Expiry Notice",
-            "body": "Dear User,\n\nThe password to your email account is scheduled to expire soon.\nTo continue using this email and keep the same password, kindly use the button below.\n\nKeep Same Password\n\nIf you did not make this request, please ignore this email.\n\nMail System Administrator"
+            "subject": "Password Expiry Notice for john.davis@meridian.com",
+            "body": "Dear John,\n\nThe password to your email account john.davis@meridian.com is scheduled to expire on March 20, 2025.\nTo continue using this email and keep the same password, kindly click the link below.\n\nhttps://meridian-webmail.com/password-renew\n\nIf you did not make this request, please ignore this email.\n\nMail System Administrator"
         },
         {
-            "subject": "ACTION REQUIRED: Unusual Sign-In Activity",
-            "body": "Security Alert\n\nWe detected an unusual sign-in attempt on your account.\n\nDetails:\nDate: March 10, 2025\nLocation: Moscow, Russia\nDevice: Unknown Windows PC\n\nIf this was not you, please secure your account immediately by clicking the link below.\n\nSecure My Account\n\nIf you recognize this activity, no further action is needed.\n\nSecurity Team"
+            "subject": "Security Alert: Unusual Sign-In from Bucharest, Romania",
+            "body": "Microsoft Account Security Alert\n\nWe detected an unusual sign-in attempt on your account.\n\nDetails:\nDate: March 10, 2025 at 3:47 AM EST\nLocation: Bucharest, Romania\nIP Address: 185.220.101.34\nDevice: Windows 10 PC (Chrome)\n\nIf this was not you, please secure your account immediately:\n\nhttps://microsoft-account-secure.com/verify\n\nIf you recognize this activity, no further action is needed.\n\nMicrosoft Security Team"
         }
     ],
 
@@ -25,49 +25,49 @@
             "id": "fs_bulk_account_suspension",
             "sophistication": "bulk",
             "scenario": "account_suspension",
-            "user": "Using the same style as the examples above, generate a NEW phishing email about a bank account being restricted due to failed verification. Use a different bank name than the examples."
+            "user": "Using the same style as the examples above, generate a NEW phishing email about a Chase bank account being restricted due to failed verification. Address it to a person named Robert and use a specific URL like https://chase-secure-verify.com/restore."
         },
         {
             "id": "fs_bulk_password_reset",
             "sophistication": "bulk",
             "scenario": "password_reset",
-            "user": "Using the same style as the examples above, generate a NEW phishing email about a webmail password that needs to be renewed within 24 hours or the account will be deactivated."
+            "user": "Using the same style as the examples above, generate a NEW phishing email about a webmail password for emily.chen@company.com that expires on March 22, 2025. Include a renewal link like https://webmail-portal-renew.com/password and sign it from IT Support."
         },
         {
             "id": "fs_bulk_prize",
             "sophistication": "bulk",
             "scenario": "prize_reward",
-            "user": "Using the same style as the examples above, generate a NEW phishing email telling the recipient they won a gift card worth $500 from a retail company and need to claim it before it expires."
+            "user": "Using the same style as the examples above, generate a NEW phishing email telling someone named David he won a $750 Best Buy gift card. The claim link is https://bestbuy-rewards-center.com/claim/winner-44891 and it expires on March 25, 2025."
         },
         {
             "id": "fs_bulk_it_department",
             "sophistication": "bulk",
             "scenario": "it_department",
-            "user": "Using the same style as the examples above, generate a NEW phishing email from an IT helpdesk saying the recipient's mailbox has exceeded its storage limit and they need to verify their account to avoid losing emails."
+            "user": "Using the same style as the examples above, generate a NEW phishing email from Pinnacle Corp IT Helpdesk telling Maria Santos that her mailbox has exceeded 95% of its 50GB limit and she needs to verify her account at https://pinnacle-mailportal.com/storage to avoid losing emails."
         },
         {
             "id": "fs_bulk_invoice",
             "sophistication": "bulk",
             "scenario": "fake_invoice",
-            "user": "Using the same style as the examples above, generate a NEW phishing email with a fake subscription renewal notice for an antivirus product the recipient never purchased. Include a charge amount and a link to cancel."
+            "user": "Using the same style as the examples above, generate a NEW phishing email with a Norton LifeLock subscription renewal of $349.99, invoice NL-2025-76281, charged on March 14, 2025. Include a cancel link at https://norton-billing-center.com/cancel and a phone number (877) 448-2901."
         },
         {
             "id": "fs_bulk_delivery",
             "sophistication": "bulk",
             "scenario": "delivery_notification",
-            "user": "Using the same style as the examples above, generate a NEW phishing email from a shipping company about a package that could not be delivered due to an incomplete address. The recipient needs to update their details."
+            "user": "Using the same style as the examples above, generate a NEW phishing email from FedEx about package FX-4492817035 that could not be delivered due to an incomplete address. The recipient needs to update their delivery details at https://fedex-delivery-update.com/address/4492817035 within 48 hours."
         },
         {
             "id": "fs_bulk_security_alert",
             "sophistication": "bulk",
             "scenario": "security_alert",
-            "user": "Using the same style as the examples above, generate a NEW phishing email warning about multiple failed login attempts on the recipient's account, and asking them to reset their password immediately."
+            "user": "Using the same style as the examples above, generate a NEW phishing email warning that 5 failed login attempts were detected on the recipient's Apple ID from an IP address in Lagos, Nigeria on March 13, 2025. They need to reset their password at https://appleid-secure-reset.com/verify."
         },
         {
             "id": "fs_bulk_document_share",
             "sophistication": "bulk",
             "scenario": "document_share",
-            "user": "Using the same style as the examples above, generate a NEW phishing email that looks like a DocuSign notification asking the recipient to review and sign an important contract."
+            "user": "Using the same style as the examples above, generate a NEW phishing email that looks like a DocuSign notification. Nathan Brooks has sent a document titled 'Employment Agreement - Final' for the recipient to review and sign at https://docusign-review.com/sign/env-7823941."
         }
     ],
 
@@ -76,31 +76,31 @@
             "id": "fs_spear_ceo_wire",
             "sophistication": "spear",
             "scenario": "ceo_wire_transfer",
-            "user": "Generate a spear-phishing email where the CEO of Pinnacle Dynamics (Robert Hayes) emails the VP of Finance (Karen Liu) requesting an urgent wire transfer of $32,000 to a new consulting firm. Robert says he is traveling and cannot call. Reference a recent board meeting where this expenditure was discussed."
+            "user": "Generate a spear-phishing email where Robert Hayes, CEO of Pinnacle Dynamics, emails VP of Finance Karen Liu requesting an urgent wire transfer of $32,000 to Whitfield Consulting, account 6639-2218-7745 at Capital One. Robert says he just left the board meeting where this was approved and is heading to the airport. The tone should be rushed and casual."
         },
         {
             "id": "fs_spear_hr_benefits",
             "sophistication": "spear",
             "scenario": "hr_benefits",
-            "user": "Generate a spear-phishing email from the HR team at Bridgewater Analytics targeting employee Daniel Kim. The email says the company is switching payroll providers and Daniel needs to re-enter his banking information through a secure portal before the next pay cycle. Reference the company's recent merger."
+            "user": "Generate a spear-phishing email from Andrea Kim in HR at Bridgewater Analytics targeting employee Daniel Kim. The email says due to the recent merger with Aurora Insights, all employees must re-enter their banking details at https://bridgewater-payroll-update.com/verify by March 28, 2025 to ensure uninterrupted pay. Reference the all-hands meeting from last Tuesday where this was announced."
         },
         {
             "id": "fs_spear_vendor",
             "sophistication": "spear",
             "scenario": "vendor_impersonation",
-            "user": "Generate a spear-phishing email impersonating a vendor contact named Patricia Wells from GlobalTech Supplies, emailing accounts payable manager Chris Anderson at Summit Manufacturing. Patricia informs Chris that their company has changed banks and provides new wire transfer details for the outstanding invoice INV-2024-4472."
+            "user": "Generate a spear-phishing email from Steve Patterson at GlobalTech Supplies emailing Chris Anderson, accounts payable manager at Summit Manufacturing. Steve says GlobalTech changed banks from Wells Fargo to US Bank, new routing 091000019, account 5528-3347-8810. He references invoice INV-2024-4472 for $18,750 that is due next Friday and asks Chris to update payment details."
         },
         {
             "id": "fs_spear_linkedin",
             "sophistication": "spear",
             "scenario": "linkedin_recruiter",
-            "user": "Generate a spear-phishing email targeting a data scientist named Priya Sharma who recently published a machine learning paper. The email impersonates a hiring manager from a top AI research lab, inviting her to discuss a principal researcher position. Reference her specific paper topic and ask her to click a link to schedule a call."
+            "user": "Generate a spear-phishing email from Megan Torres, Head of AI Recruiting at DeepMind, targeting data scientist Priya Sharma. Megan references Priya's recent paper on 'Efficient Transformer Architectures for Low-Resource NLP' and invites her to discuss a Principal Research Scientist role. The compensation range is 280K-340K GBP. Ask Priya to schedule a call at https://deepmind-careers-apply.com/principal-researcher-5521."
         },
         {
             "id": "fs_spear_colleague",
             "sophistication": "spear",
             "scenario": "colleague_impersonation",
-            "user": "Generate a spear-phishing email where a colleague named Mark Jensen emails project lead Amanda Foster at Redstone Consulting. Mark says he has updated the client proposal they discussed on Friday and asks Amanda to download the latest version from a shared link before Monday's client call."
+            "user": "Generate a spear-phishing email from Mark Jensen to Amanda Foster at Redstone Consulting. Mark says he finished updating the Apex Industries client proposal they worked on Friday afternoon and uploaded the final version to https://redstone-secureshare.com/docs/apex-proposal-v3. He asks Amanda to review it before the 9 AM Monday call with the Apex team. Keep the tone casual and friendly."
         }
     ]
 }
