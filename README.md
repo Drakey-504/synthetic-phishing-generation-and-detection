@@ -1,4 +1,4 @@
-### synthetic-phishing-generation-and-detection
+# synthetic-phishing-generation-and-detection
 Synthetic Phishing Generation and Detection Project for AI Applications in Information Security, Spring 2026
 
 ## Setup
@@ -6,6 +6,7 @@ Synthetic Phishing Generation and Detection Project for AI Applications in Infor
 ### Prerequisites
 - [Miniconda](https://docs.conda.io/en/latest/miniconda.html) or [Anaconda](https://www.anaconda.com/download)
 - [Ollama](https://ollama.com) (installed separately as a system application)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (for running SpamAssassin in Phase 3)
 
 ### Environment Setup
 
@@ -71,7 +72,7 @@ All raw datasets are stored in `data/raw/` and excluded from version control via
 - Used as a pre-built benchmark to compare our synthetic emails against
 - Save to `data/raw/opara/`
 
-## Data Pipeline
+## Phase 1: Data Pipeline
 
 Run the following scripts in order from the project root to go from raw datasets to a clean, split dataset ready for model training.
 
@@ -124,34 +125,166 @@ jupyter lab notebooks/01_eda.ipynb
 
 The notebook covers class distribution, text length analysis, top words per class, leakage checks, source distribution, and sample emails.
 
+## Phase 2: Synthetic Phishing Generation
+
+Uses Llama 3 (8B) via Ollama to generate synthetic phishing emails across three methods simulating escalating attacker capability.
+
+### Step 1: Generate
+
+```bash
+python scripts/generate_phishing.py
+```
+
+Produces 460 synthetic phishing emails:
+- **zero_shot** (130): no phishing examples in prompt — simulates a low-effort attacker
+- **few_shot** (130): prompt includes real phishing examples — simulates an attacker with access to a phishing corpus
+- **rephrasing** (200): takes real Nazario/Nigerian emails and has the LLM rewrite them professionally — simulates an attacker polishing proven phishing
+
+Bulk and spear-phishing variants are generated across 13 scenarios (account_suspension, ceo_wire_transfer, document_share, hr_benefits, linkedin_recruiter, password_reset, etc.).
+
+**Output:** `data/processed/synthetic_phishing.csv` (460 rows)
+
+### Step 2: Clean
+
+Strips generation artifacts: trailing meta-commentary from the LLM ("Note: I rewrote the email to..."), unfilled template placeholders (`[Recipient]`, `[amount]`), and exact duplicates. Placeholders are filled with randomized plausible values drawn from per-category pools using deterministic per-row sampling.
+
+```bash
+python scripts/cleanup_synthetic_phishing.py \
+    --input  data/processed/synthetic_phishing.csv \
+    --output data/processed/synthetic_phishing_clean.csv \
+    --seed 42
+```
+
+**Output:** `data/processed/synthetic_phishing_clean.csv` (457 rows after deduplication)
+
+## Phase 3: Detection
+
+Four detectors are evaluated on both the real test set (baseline) and the synthetic phishing set (detection gap). Each detector lives in its own subdirectory under `detection/` and writes standardized output CSVs to `results/<detector>/`.
+
+| Detector | Type | Owner | Status |
+|---|---|---|---|
+| Logistic Regression (TF-IDF) | classical ML | teammate | in progress |
+| XGBoost (TF-IDF) | classical ML | teammate | pending |
+| DistilBERT (fine-tuned) | transformer | teammate | pending |
+| SpamAssassin | rule-based | Karthik | done |
+
+See `detection/README.md` for shared conventions (output filenames, column layouts) that all four detectors follow.
+
+### SpamAssassin (completed)
+
+Runs SpamAssassin 4.0.1 in Docker, communicates via the SPAMC protocol over TCP directly from Python (no local `spamc` binary needed).
+
+One-time setup:
+```bash
+docker run -d --name spamd -p 783:783 --restart unless-stopped instantlinux/spamassassin
+```
+
+Run evaluation:
+```bash
+# Score the real test set
+python detection/spamassassin/eval.py \
+    --input  data/processed/emails_clean.csv \
+    --output results/spamassassin/real_test.csv \
+    --split  test
+
+# Score the synthetic phishing set
+python detection/spamassassin/eval.py \
+    --input  data/processed/synthetic_phishing_clean.csv \
+    --output results/spamassassin/synthetic.csv
+
+# Compute baseline metrics and detection gap
+python detection/spamassassin/gap.py \
+    --real results/spamassassin/real_test.csv \
+    --synthetic results/spamassassin/synthetic.csv \
+    --synthetic-meta data/processed/synthetic_phishing_clean.csv \
+    --outdir results/spamassassin/
+```
+
+Full setup instructions: `detection/spamassassin/setup.md`.
+Run instructions: `detection/spamassassin/README.md`.
+
+**Key result:** SpamAssassin catches 50.7% of real phishing but only 13.6% of synthetic phishing — a 37-point detection gap. Few-shot synthetic phishing is completely invisible (0% caught). Full breakdown in `results/spamassassin/detection_gap.csv`.
+
+## Phase 4: Augmentation Experiment (Mitigation)
+
+Tests whether retraining ML detectors on real + synthetic phishing closes the detection gap.
+
+### Step 1: Prepare Augmentation Data
+
+```bash
+python scripts/prepare_augmentation.py
+```
+
+Splits the 457 synthetic emails 50/50 (stratified by method × sophistication) into:
+- 228 emails added to the training set
+- 229 emails held out as the augmentation evaluation target
+
+**Outputs:**
+- `data/processed/synthetic_split.csv` — source of truth, 457 rows + `aug_split` column
+- `data/processed/synthetic_test.csv` — held-out synthetic phishing (229 rows)
+- `data/processed/emails_augmented_train.csv` — real train + synthetic train combined (10,814 rows)
+
+### Step 2: Retrain and Evaluate (per ML detector)
+
+For LR, XGBoost, and DistilBERT:
+1. Train a **baseline** model on `emails_clean.csv` (split='train')
+2. Train an **augmented** model on `emails_augmented_train.csv` (all rows)
+3. Evaluate both on `synthetic_test.csv` (primary) and `emails_clean.csv` (split='test', sanity check)
+
+SpamAssassin is rule-based so it isn't retrained — the augmentation experiment applies only to the ML detectors.
+
+### Step 3: Cross-Detector Analysis
+
+(Not yet written) Aggregates all four detectors' `detection_gap.csv` files into the headline cross-detector comparison table and the before/after augmentation table.
+
 ## Project Structure
 
 ```
 ├── data/
-│   ├── raw/                  # Raw downloaded datasets (gitignored)
-│   └── processed/            # Cleaned CSVs (gitignored)
-├── detection/                # Classifier training scripts and saved models
-├── generation/               # Prompt templates and generation scripts
+│   ├── raw/                    # Raw downloaded datasets (gitignored)
+│   └── processed/              # Cleaned CSVs (gitignored)
+├── detection/                  # Classifier scripts + saved models
+│   ├── README.md               # Shared conventions for all detectors
+│   ├── spamassassin/           # Rule-based detector (done)
+│   │   ├── README.md
+│   │   ├── setup.md
+│   │   ├── eval.py
+│   │   └── gap.py
+│   ├── logistic_regression/    # (teammate)
+│   ├── xgboost/                # (teammate)
+│   └── distilbert/             # (teammate)
+├── generation/                 # Prompt templates and generation configs
+│   └── prompts/
+│       ├── zero_shot.json
+│       ├── few_shot.json
+│       └── rephrasing.json
 ├── notebooks/
-│   └── 01_eda.ipynb          # Exploratory data analysis
-├── results/                  # Output metrics, confusion matrices, charts
+│   ├── 01_eda.ipynb            # Exploratory data analysis
+│   └── 02_Baseline_Logistic.ipynb  # LR baseline (teammate)
+├── results/
+│   └── spamassassin/           # Phase 3 SpamAssassin results
 ├── scripts/
-│   ├── email_utils.py        # Shared email parsing utilities
-│   ├── parse_nazario.py      # Nazario corpus parser
-│   ├── parse_nigerian.py     # Nigerian fraud dataset parser
-│   ├── parse_enron.py        # Enron email dataset parser
-│   ├── parse_spamassassin.py # SpamAssassin easy_ham parser
-│   ├── combine_datasets.py   # Combines all parsed CSVs
-│   ├── preprocess.py         # Cleaning and preprocessing
-│   └── split_data.py         # Train/test split
+│   ├── email_utils.py          # Shared email parsing utilities
+│   ├── parse_nazario.py
+│   ├── parse_nigerian.py
+│   ├── parse_enron.py
+│   ├── parse_spamassassin.py
+│   ├── combine_datasets.py
+│   ├── preprocess.py
+│   ├── split_data.py
+│   ├── generate_phishing.py            # Phase 2 generation
+│   ├── cleanup_synthetic_phishing.py   # Phase 2 cleanup
+│   └── prepare_augmentation.py         # Phase 4 augmentation data prep
 ├── .gitignore
-├── environment.yml           # Conda environment specification
+├── environment.yml             # Conda environment specification
 └── README.md
 ```
 
 ## Dataset Summary
 
 After running the full pipeline:
+
+### Real dataset (Phase 1)
 
 | Metric | Value |
 |--------|-------|
@@ -169,3 +302,21 @@ After running the full pipeline:
 | SpamAssassin | Legitimate | 3,772 |
 | Nazario | Phishing | 1,546 |
 | Nigerian Fraud | Phishing | 3,289 |
+
+### Synthetic dataset (Phase 2)
+
+| Method | Count | Description |
+|---|---|---|
+| zero_shot | 130 | 80 bulk + 50 spear, no examples in prompt |
+| few_shot | 127 | 80 bulk + 47 spear, prompt includes real phishing examples |
+| rephrasing | 200 | 80 Nazario + 120 Nigerian sources, rewritten by LLM |
+| **Total** | **457** | |
+
+### Augmented dataset (Phase 4)
+
+| Metric | Value |
+|---|---|
+| Synthetic train (added to real train) | 228 |
+| Synthetic test (held out) | 229 |
+| Total augmented training set | 10,814 rows (10,586 real + 228 synthetic) |
+| Synthetic proportion of training data | 2.1% (5.6% of phishing) |
