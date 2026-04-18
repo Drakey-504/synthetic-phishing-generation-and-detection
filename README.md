@@ -220,16 +220,15 @@ Splits the 457 synthetic emails 50/50 (stratified by method × sophistication) i
 - 229 emails held out as the augmentation evaluation target
 
 **Outputs:**
-- `data/processed/synthetic_split.csv` — source of truth, 457 rows + `aug_split` column
-- `data/processed/synthetic_test.csv` — held-out synthetic phishing (229 rows)
-- `data/processed/emails_augmented_train.csv` — real train + synthetic train combined (10,814 rows)
+- `data/processed/synthetic_split.csv` — all 457 synthetic emails with a new `aug_split` column (values: `train` / `test`). Filter by `aug_split` at load time, same pattern as `emails_clean.csv`'s `split` column.
+- `data/processed/emails_augmented_train.csv` — real train + synthetic train combined (10,814 rows).
 
 ### Step 2: Retrain and Evaluate (per ML detector)
 
 For LR, XGBoost, and DistilBERT:
 1. Train a **baseline** model on `emails_clean.csv` (split='train')
 2. Train an **augmented** model on `emails_augmented_train.csv` (all rows)
-3. Evaluate both on `synthetic_test.csv` (primary) and `emails_clean.csv` (split='test', sanity check)
+Evaluate both on `synthetic_split.csv` filtered to `aug_split == 'test'` (primary) and `emails_clean.csv` filtered to `split == 'test'` (sanity check).
 
 SpamAssassin is rule-based so it isn't retrained — the augmentation experiment applies only to the ML detectors.
 
