@@ -1,7 +1,7 @@
 """
 prepare_augmentation.py
-Build the augmented training dataset and held-out synthetic test set for the
-Phase 4 augmentation experiment.
+Build the augmented training dataset and mark the held-out synthetic test set
+for the Phase 4 augmentation experiment.
 
 The augmentation experiment asks: if ML detectors are retrained on real
 phishing + some synthetic phishing, does the detection gap close?
@@ -16,17 +16,17 @@ Inputs:
     data/processed/synthetic_phishing_clean.csv  (457 synthetic phishing emails)
 
 Outputs (to --outdir, default data/processed/):
-    synthetic_split.csv            Source-of-truth: 457 rows + 'aug_split' column.
-    synthetic_test.csv             Held-out synthetic phishing (~228 rows).
-                                   Keeps method/sophistication/scenario columns
-                                   for per-strata breakdowns at eval time.
-    emails_augmented_train.csv     Real-train rows + ~229 synthetic-train rows
+    synthetic_split.csv            All 457 synthetic rows + 'aug_split' column
+                                   (values: 'train' or 'test'). Filter by
+                                   aug_split at load time — same pattern as
+                                   emails_clean.csv's 'split' column.
+    emails_augmented_train.csv     Real-train rows + synthetic-train rows
                                    labeled as phishing. Same schema as
                                    emails_clean.csv so trainers need no changes.
 
 Evaluation targets for the augmented model:
     - Real test:       emails_clean.csv where split == 'test' (unchanged, 2,647 rows).
-    - Synthetic test:  synthetic_test.csv (228 rows).
+    - Synthetic test:  synthetic_split.csv where aug_split == 'test' (229 rows).
 
 Usage:
     python scripts/prepare_augmentation.py
@@ -142,13 +142,6 @@ def main() -> int:
     n_synth_test = (synth_split["aug_split"] == "test").sum()
     print(f"\nTotals: synthetic train = {n_synth_train}, synthetic test = {n_synth_test}")
 
-    # -- Held-out synthetic test set --------------------------------------
-    # Keep all original columns so eval scripts can do per-method /
-    # per-sophistication / per-scenario breakdowns on the held-out set.
-    synth_test = synth_split[synth_split["aug_split"] == "test"].copy()
-    synth_test.to_csv(args.outdir / "synthetic_test.csv", index=False)
-    print(f"\n✓ Wrote {args.outdir / 'synthetic_test.csv'}  ({len(synth_test)} rows)")
-
     # -- Augmented training file ------------------------------------------
     synth_train = synth_split[synth_split["aug_split"] == "train"].copy()
     combined = build_augmented_train(real, synth_train)
@@ -180,10 +173,10 @@ For each ML detector (LR, XGBoost, DistilBERT), train TWO models:
 
 Evaluate BOTH models on BOTH test sets:
 
-  Real test:       emails_clean.csv where split=='test'  (2,647 rows)
-  Synthetic test:  synthetic_test.csv                    (228 rows)
+  Real test:       emails_clean.csv    where split=='test'       (2,647 rows)
+  Synthetic test:  synthetic_split.csv where aug_split=='test'   (229 rows)
 
-Headline result: detection rate on synthetic_test
+Headline result: detection rate on the synthetic test subset
   - Baseline model → the 'detection gap' number from Phase 3.
   - Augmented model → should be much higher if augmentation worked.
 
