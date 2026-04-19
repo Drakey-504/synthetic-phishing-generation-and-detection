@@ -1,0 +1,230 @@
+id,label,subject,score,prediction
+zs_bulk_account_suspension_1,phishing,Urgent: Your Wells Fargo Account Suspended - Verify Now!,0.9999023675918579,phishing
+zs_bulk_account_suspension_5,phishing,Urgent: Account Activity Alert - Your Wells Fargo Account Has Been Suspended,0.9999032020568848,phishing
+zs_bulk_account_suspension_8,phishing,Urgent: Your Wells Fargo Account Temporarily Suspended,0.9999059438705444,phishing
+zs_bulk_password_reset_6,phishing,"Your Email Password Expiration Notice - Take Action by March 18, 2025!",0.9999114274978638,phishing
+zs_bulk_password_reset_7,phishing,"Your Email Password Expiration Notification - Action Required by March 18th, 2025",0.9999136924743652,phishing
+zs_bulk_prize_1,phishing,You've Won a $500 Amazon Gift Card!,0.9998911619186401,phishing
+zs_bulk_prize_2,phishing,You've Won a $500 Amazon Gift Card!,0.9998923540115356,phishing
+zs_bulk_prize_3,phishing,Congratulations! You've Won a $500 Amazon Gift Card!,0.9998980760574341,phishing
+zs_bulk_prize_4,phishing,You've Won a $500 Amazon Gift Card!,0.9999111890792847,phishing
+zs_bulk_prize_5,phishing,Congratulations! You've Won a $500 Amazon Gift Card!,0.9999014139175415,phishing
+zs_bulk_prize_6,phishing,Congratulations! You Have Won a $500 Amazon Gift Card!,0.9999018907546997,phishing
+zs_bulk_prize_8,phishing,Congratulations! You've Won a $500 Amazon Gift Card!,0.9999005794525146,phishing
+zs_bulk_it_department_1,phishing,Your Email Storage is Reaching Critical Levels - Upgrade Now!,0.9999092817306519,phishing
+zs_bulk_it_department_2,phishing,Mailbox Alert: Storage Capacity at 97%,0.9998950958251953,phishing
+zs_bulk_it_department_4,phishing,Mailbox Storage Alert: Upgrade Required - 97% Capacity Reached!,0.999914288520813,phishing
+zs_bulk_it_department_6,phishing,Urgent: Your Mailbox Storage Capacity Alert,0.9999101161956787,phishing
+zs_bulk_it_department_8,phishing,Mailbox Alert: Storage Upgrade Required for meridiancorp.com Account,0.9999011754989624,phishing
+zs_bulk_it_department_9,phishing,Mailbox Storage Alert - Urgent Action Required,0.9998975992202759,phishing
+zs_bulk_invoice_1,phishing,Your McAfee Total Protection Subscription Renewal - INV-2025-88432,0.999910831451416,phishing
+zs_bulk_invoice_2,phishing,Your McAfee Total Protection Subscription Renewal Payment Confirmation,0.9999109506607056,phishing
+zs_bulk_invoice_5,phishing,Your McAfee Total Protection Subscription Renewal Payment Confirmation,0.9999161958694458,phishing
+zs_bulk_invoice_6,phishing,Important: McAfee Total Protection Subscription Renewal Confirmation - INV-2025-88432,0.9999161958694458,phishing
+zs_bulk_invoice_7,phishing,Your McAfee Total Protection Subscription Renewal Confirmation,0.9999167919158936,phishing
+zs_bulk_invoice_9,phishing,Your McAfee Total Protection Subscription Renewal Confirmation,0.9999133348464966,phishing
+zs_bulk_delivery_2,phishing,Urgent: Additional Shipping Fee for Package DHL-8847291056,0.9999167919158936,phishing
+zs_bulk_delivery_3,phishing,Urgent: Package Delivery Update - Tracking Number DHL-8847291056,0.9998997449874878,phishing
+zs_bulk_delivery_5,phishing,Urgent: Additional Shipping Fee Required for DHL Package,0.9999072551727295,phishing
+zs_bulk_delivery_7,phishing,Urgent: Additional Shipping Fee for Package DHL-8847291056,0.9999154806137085,phishing
+zs_bulk_delivery_9,phishing,Urgent: Additional Shipping Fee Required for Package DHL-8847291056,0.9999035596847534,phishing
+zs_bulk_security_alert_2,phishing,Alert: Unauthorized Access to Your Microsoft Account,0.9999072551727295,phishing
+zs_bulk_security_alert_3,phishing,Unauthorized access detected on your Microsoft account,0.9999092817306519,phishing
+zs_bulk_security_alert_5,phishing,Unusual Activity on Your Microsoft Account,0.999913215637207,phishing
+zs_bulk_security_alert_6,phishing,Urgent: Possible Unauthorized Access to Your Microsoft Account,0.9999123811721802,phishing
+zs_bulk_security_alert_7,phishing,Alert: Unauthorized Login Attempt from Microsoft Account,0.9999094009399414,phishing
+zs_bulk_security_alert_9,phishing,Unauthorized Access Detected: Microsoft Account Notification,0.9999080896377563,phishing
+zs_bulk_document_share_0,phishing,Karen Mitchell shared Q1 2025 Budget Review.xlsx with you on OneDrive,0.9999141693115234,phishing
+zs_bulk_document_share_1,phishing,Karen Mitchell shared a file with you on OneDrive,0.9998999834060669,phishing
+zs_bulk_document_share_5,phishing,Karen Mitchell shared a file with you - Q1 2025 Budget Review.xlsx,0.9999021291732788,phishing
+zs_bulk_document_share_6,phishing,Karen Mitchell shared a file with you on OneDrive,0.9998742341995239,phishing
+zs_bulk_document_share_9,phishing,Karen Mitchell shared a file with you on OneDrive,0.9999114274978638,phishing
+zs_spear_ceo_wire_0,phishing,Quick Favor Needed - Wire Transfer Urgent!,0.9992250204086304,phishing
+zs_spear_ceo_wire_1,phishing,Quick Favor Needed Sarah - Urgent,0.999839186668396,phishing
+zs_spear_ceo_wire_7,phishing,"Quick Favor Needed, Sarah!",0.9997300505638123,phishing
+zs_spear_ceo_wire_8,phishing,Quick Favor on Urgent Matter - Need Your Help Today,0.9998512268066406,phishing
+zs_spear_hr_benefits_1,phishing,Don't Miss Out: Update Your Benefits Enrollment by Oct 5!,0.9998990297317505,phishing
+zs_spear_hr_benefits_2,phishing,Important: Update Your Direct Deposit Information for Upcoming Benefit Enrollment,0.9999027252197266,phishing
+zs_spear_hr_benefits_4,phishing,Update Your Direct Deposit Information for Upcoming Benefits Enrollment,0.9998785257339478,phishing
+zs_spear_hr_benefits_5,phishing,Important: Company Benefits Enrollment Period Now Open,0.9999109506607056,phishing
+zs_spear_hr_benefits_6,phishing,Important: Company Benefits Enrollment - Don't Miss the Deadline!,0.9999058246612549,phishing
+zs_spear_hr_benefits_8,phishing,Important: Company Benefits Enrollment Period - Don't Miss the Deadline!,0.999904990196228,phishing
+zs_spear_vendor_1,phishing,Important Update on Payment Information for PO-2024-8891,0.9999074935913086,phishing
+zs_spear_vendor_2,phishing,Important Update: New Bank Information for Payment Records,0.9999113082885742,phishing
+zs_spear_vendor_4,phishing,Important Update on Purchase Order PO-2024-8891,0.9999086856842041,phishing
+zs_spear_vendor_5,phishing,Important Update on Wire Transfer Information for PO-2024-8891,0.9999121427536011,phishing
+zs_spear_vendor_7,phishing,Update on Payment Instructions for PO-2024-8891,0.9999071359634399,phishing
+zs_spear_vendor_9,phishing,Urgent: Update Payment Records for PO-2024-8891,0.999910831451416,phishing
+zs_spear_linkedin_3,phishing,Senior Cloud Architect Opportunity at Stripe,0.9998599290847778,phishing
+zs_spear_linkedin_4,phishing,Exciting Senior Cloud Architect Opportunity at Stripe,0.999862790107727,phishing
+zs_spear_linkedin_6,phishing,Exciting Senior Cloud Architect Opportunity at Stripe!,0.9998900890350342,phishing
+zs_spear_linkedin_9,phishing,Exciting Senior Cloud Architect Opportunity at Stripe!,0.9998859167098999,phishing
+zs_spear_colleague_1,phishing,Q3 Earnings Report Update for Tomorrow's Board Meeting,0.9998719692230225,phishing
+zs_spear_colleague_3,phishing,Updated Q3 Earnings Report for Tomorrow's Board Meeting,0.9998327493667603,phishing
+zs_spear_colleague_4,phishing,Q3 Earnings Report Update - Your Input Needed!,0.9998403787612915,phishing
+zs_spear_colleague_7,phishing,Q3 Earnings Report Update - Your Feedback Needed by Tomorrow!,0.9998676776885986,phishing
+zs_spear_colleague_8,phishing,Q3 Earnings Report Update for Tomorrow's Board Meeting,0.9997655749320984,phishing
+fs_bulk_account_suspension_1,phishing,Important: Your Chase Account Restricted Due to Failed Verification,0.9999068975448608,phishing
+fs_bulk_account_suspension_2,phishing,Your Chase Account is Restricted for Verification Purposes,0.9999078512191772,phishing
+fs_bulk_account_suspension_3,phishing,Your Chase Account is Temporarily Restricted,0.9999107122421265,phishing
+fs_bulk_account_suspension_6,phishing,Your Chase Account is Temporarily Restricted - Verification Required,0.9999063014984131,phishing
+fs_bulk_account_suspension_8,phishing,Important Update on Your Chase Account,0.9999099969863892,phishing
+fs_bulk_password_reset_1,phishing,Password Expiry Notice for emily.chen@company.com,0.9999090433120728,phishing
+fs_bulk_password_reset_5,phishing,Password Expiry Notice for Emily Chen,0.999909520149231,phishing
+fs_bulk_password_reset_7,phishing,Password Expiry Notice for emily.chen@company.com,0.9999111890792847,phishing
+fs_bulk_prize_0,phishing,You've Won a $750 Best Buy Gift Card!,0.9999052286148071,phishing
+fs_bulk_prize_3,phishing,Congratulations! You've Won a $750 Best Buy Gift Card!,0.9999029636383057,phishing
+fs_bulk_prize_4,phishing,You've Won a $750 Best Buy Gift Card!,0.9999040365219116,phishing
+fs_bulk_prize_6,phishing,Congratulations! You've Won a $750 Best Buy Gift Card!,0.9999129772186279,phishing
+fs_bulk_prize_7,phishing,Congratulations! You're a Best Buy Winner!,0.9998985528945923,phishing
+fs_bulk_prize_9,phishing,Congratulations! You Won a $750 Best Buy Gift Card!,0.9999051094055176,phishing
+fs_bulk_it_department_0,phishing,Important: Your Pinnacle Mailbox Storage Alert,0.9999047517776489,phishing
+fs_bulk_it_department_2,phishing,Your Pinnacle Mailbox Storage Warning,0.9999024868011475,phishing
+fs_bulk_it_department_5,phishing,Your Pinnacle Mailbox Exceeded 95% Storage Limit,0.999903678894043,phishing
+fs_bulk_it_department_9,phishing,Storage Alert: High Usage on Your Pinnacle Mailbox,0.9999097585678101,phishing
+fs_bulk_invoice_0,phishing,Norton LifeLock Subscription Renewal Invoice - NL-2025-76281,0.9999147653579712,phishing
+fs_bulk_invoice_1,phishing,Norton LifeLock Subscription Renewal Invoice - NL-2025-76281,0.9999164342880249,phishing
+fs_bulk_invoice_4,phishing,Norton LifeLock Subscription Renewal Reminder - Invoice NL-2025-76281,0.9999078512191772,phishing
+fs_bulk_invoice_6,phishing,Renew Your Norton LifeLock Subscription,0.9999041557312012,phishing
+fs_bulk_invoice_9,phishing,Norton LifeLock Subscription Renewal Invoice NL-2025-76281,0.9999148845672607,phishing
+fs_bulk_delivery_1,phishing,Package Delivery Update for FX-4492817035,0.9999070167541504,phishing
+fs_bulk_delivery_4,phishing,Package FX-4492817035: Delivery Update Required,0.9999091625213623,phishing
+fs_bulk_delivery_5,phishing,Update Your Delivery Details for Package FX-4492817035,0.9999082088470459,phishing
+fs_bulk_delivery_8,phishing,Package Delivery Issue - Update Your Address Today!,0.9999086856842041,phishing
+fs_bulk_delivery_9,phishing,Delivery Update for Package FX-4492817035,0.9999110698699951,phishing
+fs_bulk_security_alert_0,phishing,Security Alert: Unusual Sign-In Attempts on Your Apple ID,0.9999021291732788,phishing
+fs_bulk_security_alert_2,phishing,"Security Alert: Unusual Sign-In Attempts from Lagos, Nigeria",0.9999125003814697,phishing
+fs_bulk_security_alert_3,phishing,"Security Alert: Unusual Sign-In Attempts from Lagos, Nigeria",0.9999103546142578,phishing
+fs_bulk_security_alert_4,phishing,"Security Alert: Unusual Sign-In Attempts from Lagos, Nigeria",0.9999101161956787,phishing
+fs_bulk_security_alert_6,phishing,Security Alert: Unusual Sign-In Attempts on Your Apple ID,0.9999121427536011,phishing
+fs_bulk_document_share_0,phishing,Review and Sign: Employment Agreement - Final from Nathan Brooks,0.9998891353607178,phishing
+fs_bulk_document_share_2,phishing,Document Waiting for Your Signature - Employment Agreement - Final,0.9998946189880371,phishing
+fs_bulk_document_share_3,phishing,DocuSign Notification: Employment Agreement - Final Sent by Nathan Brooks,0.9999034404754639,phishing
+fs_bulk_document_share_4,phishing,Your Employment Agreement - Final Waiting for Signature,0.9999052286148071,phishing
+fs_bulk_document_share_5,phishing,Document Sent for Signature - Employment Agreement - Final,0.999886155128479,phishing
+fs_bulk_document_share_8,phishing,"Review and Sign ""Employment Agreement - Final""",0.9998878240585327,phishing
+fs_spear_ceo_wire_0,phishing,Urgent Wire Transfer Request - Pinnacle Dynamics,0.9998948574066162,phishing
+fs_spear_ceo_wire_2,phishing,Urgent: Wire Transfer Request for Project Funding,0.9998890161514282,phishing
+fs_spear_ceo_wire_6,phishing,Urgent Wire Transfer Request for Project Funding,0.9998866319656372,phishing
+fs_spear_ceo_wire_7,phishing,Urgent Wire Transfer Request for Pinnacle Dynamics,0.999886155128479,phishing
+fs_spear_ceo_wire_8,phishing,Urgent: Wire Transfer Request for Whitfield Consulting,0.9998651742935181,phishing
+fs_spear_hr_benefits_0,phishing,Important: Update Your Banking Details for Seamless Pay,0.9999029636383057,phishing
+fs_spear_hr_benefits_4,phishing,Important Payroll Update for Daniel Kim - Re-Enter Banking Details,0.9998828172683716,phishing
+fs_spear_hr_benefits_5,phishing,Important Pay Information Update - Re-Enter Banking Details,0.9998914003372192,phishing
+fs_spear_hr_benefits_6,phishing,Urgent: Update Your Payroll Details Following Aurora Insights Merger,0.9999072551727295,phishing
+fs_spear_hr_benefits_7,phishing,Important Pay Update for Daniel Kim due to Aurora Insights Merger,0.9999010562896729,phishing
+fs_spear_hr_benefits_8,phishing,Important Pay Update for All Bridgewater Analytics Employees,0.9998977184295654,phishing
+fs_spear_vendor_0,phishing,Urgent: Update Payment Details for Invoice INV-2024-4472,0.999901533126831,phishing
+fs_spear_vendor_3,phishing,Update Payment Details for Invoice INV-2024-4472,0.999916672706604,phishing
+fs_spear_vendor_4,phishing,Update Payment Details for Invoice INV-2024-4472 at Summit Manufacturing,0.9999109506607056,phishing
+fs_spear_vendor_5,phishing,Payment Update for Invoice INV-2024-4472 at Summit Manufacturing,0.9999102354049683,phishing
+fs_spear_vendor_6,phishing,Update Payment Details for Invoice INV-2024-4472,0.9999152421951294,phishing
+fs_spear_vendor_8,phishing,Urgent: Payment Update Required for Invoice INV-2024-4472,0.9999092817306519,phishing
+fs_spear_linkedin_0,phishing,Exciting Principal Research Scientist Opportunity at DeepMind,0.9998981952667236,phishing
+fs_spear_linkedin_3,phishing,Exciting Career Opportunity in AI Recruiting at DeepMind,0.9998788833618164,phishing
+fs_spear_linkedin_5,phishing,Exciting Principal Research Scientist Opportunity at DeepMind,0.9998824596405029,phishing
+fs_spear_linkedin_9,phishing,Exciting Opportunity to Join Our AI Research Team,0.9998940229415894,phishing
+fs_spear_colleague_0,phishing,Apex Proposal Update - Review Before Monday's Call,0.9998151659965515,phishing
+fs_spear_colleague_3,phishing,Apex Proposal Update for Our Monday Call,0.9998053908348083,phishing
+fs_spear_colleague_4,phishing,Apex Proposal Update & Review Request,0.9998681545257568,phishing
+fs_spear_colleague_5,phishing,Finalized Apex Industries Client Proposal for Review - Monday Call Prep,0.9998272061347961,phishing
+rephrase_nazario_0,phishing,Domain Verification Request for jose@monkey.org,0.9999163150787354,phishing
+rephrase_nazario_1,phishing,Unapproved Emails Waiting for Your Attention,0.9999104738235474,phishing
+rephrase_nazario_2,phishing,Verify Your Account Security,0.9999154806137085,phishing
+rephrase_nazario_4,phishing,Notification of Account Password Expiration - jose@monkey.org,0.9999216794967651,phishing
+rephrase_nazario_10,phishing,Notification: Account Verification Required,0.9999063014984131,phishing
+rephrase_nazario_11,phishing,Order Summary and Shipping Update,0.9999157190322876,phishing
+rephrase_nazario_12,phishing,Account Security Notice: Restriction Notification,0.9999067783355713,phishing
+rephrase_nazario_14,phishing,Password Expiration Notification - monkey.org Account Update Required,0.9999178647994995,phishing
+rephrase_nazario_15,phishing,Account Security Update Required,0.9999125003814697,phishing
+rephrase_nazario_16,phishing,File Sharing Notification - jose@monkey.org,0.999910831451416,phishing
+rephrase_nazario_23,phishing,Important Notification from Roundcube Customer Server,0.9999172687530518,phishing
+rephrase_nazario_26,phishing,Notification: Pending Emails for jose@monkey.org Account,0.9999113082885742,phishing
+rephrase_nazario_27,phishing,Notification of Undelivered Emails in Your Inbox,0.9999239444732666,phishing
+rephrase_nazario_28,phishing,Purchase Order Request - RFQ-HL51L05,0.9999175071716309,phishing
+rephrase_nazario_29,phishing,Confirm Your Netflix Profile Information,0.9999054670333862,phishing
+rephrase_nazario_31,phishing,Missed Call Notification from Accounts Payable,0.9999219179153442,phishing
+rephrase_nazario_35,phishing,Notification: Pending Email Messages for Your Review,0.9999169111251831,phishing
+rephrase_nazario_37,phishing,Notification: Access Your Blocked Messages,0.9999160766601562,phishing
+rephrase_nazario_38,phishing,Important Quota Update for Your Monkey.org Email Account,0.9999240636825562,phishing
+rephrase_nazario_41,phishing,Payment Receipt and Invoice for GeekSquad Services [PP190208843783],0.999915361404419,phishing
+rephrase_nazario_43,phishing,Completed Document: Complete with OneDrive: Signed Contract.pdf,0.9999141693115234,phishing
+rephrase_nazario_44,phishing,Notification: Mailbox Storage Reminder - jose@monkey.org,0.9999203681945801,phishing
+rephrase_nazario_50,phishing,RE: Order Updates and Invoice Request - PO24000325 & PO24000348,0.9999092817306519,phishing
+rephrase_nazario_51,phishing,Notification of Account Access Attempt - PayPal Security Check,0.9999115467071533,phishing
+rephrase_nazario_52,phishing,Update on Your Package Delivery,0.9999178647994995,phishing
+rephrase_nazario_53,phishing,Notification: Quarantined Messages Awaiting Release,0.9999221563339233,phishing
+rephrase_nazario_54,phishing,Notification of Billing Information Update Required,0.9999103546142578,phishing
+rephrase_nazario_55,phishing,Verify Your Email Address - jose@monkey.org,0.9999191761016846,phishing
+rephrase_nazario_58,phishing,jose@monkey.org Account Security Update,0.999916672706604,phishing
+rephrase_nazario_61,phishing,Urgent: Payment Remittance for Waste Management Services,0.999915361404419,phishing
+rephrase_nazario_62,phishing,Important Password Update for Your Monkey.org Account,0.9999215602874756,phishing
+rephrase_nazario_65,phishing,2024 Annual Leave Compliance Report and Important Reminders,0.9998750686645508,phishing
+rephrase_nazario_67,phishing,Your Payroll Details - Approval Notification,0.999919056892395,phishing
+rephrase_nazario_68,phishing,Account Activity Review Request,0.9999212026596069,phishing
+rephrase_nazario_69,phishing,Important: Password Expiration Notice for Your Account,0.9999204874038696,phishing
+rephrase_nazario_70,phishing,Important: Update Your Payroll Information,0.9999215602874756,phishing
+rephrase_nazario_72,phishing,File Transfer from Maryden Cruz,0.9999042749404907,phishing
+rephrase_nazario_74,phishing,Your Online Enrollment and Password Reset Instructions,0.9999140501022339,phishing
+rephrase_nazario_79,phishing,Update Your Online Profile for Member ID 11040,0.9999117851257324,phishing
+rephrase_nigerian_80,phishing,Business Opportunity and Partnership Proposal,0.9999186992645264,phishing
+rephrase_nigerian_83,phishing,Request for Assistance in Resolving Unclaimed Funds,0.9999251365661621,phishing
+rephrase_nigerian_85,phishing,Important Notification Regarding Inactive Account Funds,0.9999258518218994,phishing
+rephrase_nigerian_86,phishing,Request for Investment Partnership Opportunities,0.9999258518218994,phishing
+rephrase_nigerian_89,phishing,Request for Assistance in Processing Government Funds,0.9999217987060547,phishing
+rephrase_nigerian_91,phishing,Notification of Unclaimed Funds - Business Opportunity,0.9999256134033203,phishing
+rephrase_nigerian_92,phishing,Important Notification Regarding a Dormant Account,0.999919056892395,phishing
+rephrase_nigerian_95,phishing,Assistance Required in Managing Excess Funds,0.9999208450317383,phishing
+rephrase_nigerian_96,phishing,Notification of Unclaimed Funds - Confidential Transaction Opportunity,0.9999264478683472,phishing
+rephrase_nigerian_97,phishing,Confidential Business Opportunity for a Reliable Partner,0.999924898147583,phishing
+rephrase_nigerian_100,phishing,Partnership Opportunity for Foreign Account Transfer,0.9999200105667114,phishing
+rephrase_nigerian_102,phishing,Business Proposal for International Transfer,0.9999247789382935,phishing
+rephrase_nigerian_107,phishing,Notification of Account Inheritance,0.9999194145202637,phishing
+rephrase_nigerian_110,phishing,Investment Opportunity in Manufacturing and Real Estate Management,0.9999101161956787,phishing
+rephrase_nigerian_112,phishing,Seeking a Trustworthy Business Partner for Investment Opportunities,0.9999266862869263,phishing
+rephrase_nigerian_115,phishing,Investment Opportunity from United Kingdom,0.9999139308929443,phishing
+rephrase_nigerian_117,phishing,Business Opportunity for Financial Repatriation,0.9999277591705322,phishing
+rephrase_nigerian_118,phishing,Confidential Transaction Opportunity,0.9999216794967651,phishing
+rephrase_nigerian_120,phishing,Business Partnership Opportunity,0.9999237060546875,phishing
+rephrase_nigerian_122,phishing,Request for Assistance with Charitable Distribution,0.9999111890792847,phishing
+rephrase_nigerian_123,phishing,Request for Assistance in Managing My Estate,0.9999221563339233,phishing
+rephrase_nigerian_125,phishing,Partnership Opportunity and Request for Guidance,0.9999085664749146,phishing
+rephrase_nigerian_127,phishing,Request for Business Partnership and Assistance,0.9999274015426636,phishing
+rephrase_nigerian_128,phishing,Partnership and Investment Opportunities,0.9999176263809204,phishing
+rephrase_nigerian_129,phishing,Business Opportunity,0.9999197721481323,phishing
+rephrase_nigerian_130,phishing,Confidential Inheritance Matter - $18 Million USD,0.999919056892395,phishing
+rephrase_nigerian_131,phishing,Confidential Business Opportunity for Your Review,0.9999269247055054,phishing
+rephrase_nigerian_133,phishing,International Remittance Update from Central Bank of Nigeria,0.9999263286590576,phishing
+rephrase_nigerian_136,phishing,Investment Opportunity and Request for Assistance,0.999925971031189,phishing
+rephrase_nigerian_138,phishing,A Final Act of Kindness - Your Help Needed,0.9999120235443115,phishing
+rephrase_nigerian_140,phishing,Request for Assistance with a Financial Matter,0.9999181032180786,phishing
+rephrase_nigerian_141,phishing,Request for Assistance with Inheritance and Investment,0.9999247789382935,phishing
+rephrase_nigerian_142,phishing,Notification of Inheritance Opportunity,0.9999277591705322,phishing
+rephrase_nigerian_145,phishing,Business Opportunity and Partnership Proposal,0.9999246597290039,phishing
+rephrase_nigerian_148,phishing,Confidential Financial Opportunity,0.9999256134033203,phishing
+rephrase_nigerian_150,phishing,Confidential Business Opportunity,0.9999197721481323,phishing
+rephrase_nigerian_151,phishing,Contract Review and Audit Opportunity,0.9999209642410278,phishing
+rephrase_nigerian_153,phishing,Exciting Career Opportunity at Le-Trans,0.9999138116836548,phishing
+rephrase_nigerian_157,phishing,Request for Assistance with Family Matter,0.999924898147583,phishing
+rephrase_nigerian_158,phishing,Notification of Unclaimed Funds - African Development Bank,0.9999204874038696,phishing
+rephrase_nigerian_159,phishing,Investment Opportunity Inquiry,0.9999152421951294,phishing
+rephrase_nigerian_161,phishing,Compensation for Your Role in Our Successful Business Venture,0.999919056892395,phishing
+rephrase_nigerian_164,phishing,Partnership Opportunity in West Africa,0.9999258518218994,phishing
+rephrase_nigerian_167,phishing,A Business Opportunity of Mutual Interest,0.9999219179153442,phishing
+rephrase_nigerian_168,phishing,Request for Assistance with Financial Transaction,0.9999175071716309,phishing
+rephrase_nigerian_169,phishing,Invitation to Collaborate on a Humanitarian Effort,0.999923586845398,phishing
+rephrase_nigerian_170,phishing,Estate Administration Opportunity,0.999922513961792,phishing
+rephrase_nigerian_171,phishing,Assistance Required in a Private Family Matter,0.9999196529388428,phishing
+rephrase_nigerian_173,phishing,Invitation to Collaborate on Investment Opportunity,0.9999251365661621,phishing
+rephrase_nigerian_174,phishing,Collaboration Opportunity for International Business Venture,0.9999260902404785,phishing
+rephrase_nigerian_178,phishing,Confidential Investment Opportunity Notification,0.9999207258224487,phishing
+rephrase_nigerian_182,phishing,Confidential Business Opportunity,0.9999264478683472,phishing
+rephrase_nigerian_184,phishing,Final Acts of Philanthropy Before Departure,0.9998910427093506,phishing
+rephrase_nigerian_185,phishing,Collaboration Opportunity in the Business Sector,0.9999274015426636,phishing
+rephrase_nigerian_186,phishing,Introducing Ourselves - A Business Opportunity,0.999920129776001,phishing
+rephrase_nigerian_189,phishing,Confidential Business Opportunity,0.9999262094497681,phishing
+rephrase_nigerian_191,phishing,Business Opportunity - Succession of Estate,0.9999263286590576,phishing
+rephrase_nigerian_193,phishing,Notification of Inheritance from the Estate of Mr. Mike & Carol Hall,0.9999227523803711,phishing
+rephrase_nigerian_194,phishing,Request for Assistance with Family Legacy Matter,0.9999260902404785,phishing
+rephrase_nigerian_195,phishing,Notification of Inheritance Opportunity,0.9999260902404785,phishing
+rephrase_nigerian_199,phishing,A Proprietary Opportunity for Investment,0.9999241828918457,phishing
