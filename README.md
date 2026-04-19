@@ -161,18 +161,18 @@ python scripts/cleanup_synthetic_phishing.py \
 
 Four detectors are evaluated on both the real test set (baseline) and the synthetic phishing set (detection gap). Each detector lives in its own subdirectory under `detection/` and writes standardized output CSVs to `results/<detector>/`.
 
-| Detector | Type | Owner | Status |
-|---|---|---|---|
-| Logistic Regression (TF-IDF) | classical ML | teammate | in progress |
-| XGBoost (TF-IDF) | classical ML | teammate | pending |
-| DistilBERT (fine-tuned) | transformer | teammate | pending |
-| SpamAssassin | rule-based | Karthik | done |
+| Detector | Type | Status |
+|---|---|---|
+| SpamAssassin | rule-based | done |
+| Logistic Regression (TF-IDF) | classical ML | done |
+| XGBoost (TF-IDF) | classical ML | done |
+| DistilBERT (fine-tuned) | transformer | done |
 
 See `detection/README.md` for shared conventions (output filenames, column layouts) that all four detectors follow.
 
 ### SpamAssassin (completed)
 
-Runs SpamAssassin 4.0.1 in Docker, communicates via the SPAMC protocol over TCP directly from Python (no local `spamc` binary needed).
+Runs SpamAssassin in Docker, communicates via the SPAMC protocol over TCP directly from Python (no local `spamc` binary needed). SA's default threshold of 5.0 is designed for bulk spam and significantly under-recalls on phishing, so we tune the decision threshold on the real training set (F1-optimal) to give SA a fair comparison with the ML detectors.
 
 One-time setup:
 ```bash
@@ -181,6 +181,12 @@ docker run -d --name spamd -p 783:783 --restart unless-stopped instantlinux/spam
 
 Run evaluation:
 ```bash
+# Score the real training set — used to tune the decision threshold (~20-30 min)
+python detection/spamassassin/eval.py \
+    --input  data/processed/emails_clean.csv \
+    --output results/spamassassin/real_train.csv \
+    --split  train
+
 # Score the real test set
 python detection/spamassassin/eval.py \
     --input  data/processed/emails_clean.csv \
@@ -192,18 +198,50 @@ python detection/spamassassin/eval.py \
     --input  data/processed/synthetic_phishing_clean.csv \
     --output results/spamassassin/synthetic.csv
 
-# Compute baseline metrics and detection gap
+# Tune threshold on train, re-classify, compute baseline and detection gap
 python detection/spamassassin/gap.py \
-    --real results/spamassassin/real_test.csv \
+    --train     results/spamassassin/real_train.csv \
+    --real      results/spamassassin/real_test.csv \
     --synthetic results/spamassassin/synthetic.csv \
     --synthetic-meta data/processed/synthetic_phishing_clean.csv \
-    --outdir results/spamassassin/
+    --outdir    results/spamassassin/
 ```
 
 Full setup instructions: `detection/spamassassin/setup.md`.
 Run instructions: `detection/spamassassin/README.md`.
 
-**Key result:** SpamAssassin catches 50.7% of real phishing but only 13.6% of synthetic phishing — a 37-point detection gap. Few-shot synthetic phishing is completely invisible (0% caught). Full breakdown in `results/spamassassin/detection_gap.csv`.
+**Key result:** at the tuned threshold (1.7), SpamAssassin catches 71.2% of real phishing but only 38.7% of synthetic phishing — a 32-point detection gap. Few-shot synthetic phishing is hardest to detect (18.1% caught), followed by zero-shot (27.7%); rephrasing-based synthetic catches 59.0% because vocabulary from real source emails survives the rewrite. Spear-phishing variants evade SA most (14.0% caught). Full breakdown in `results/spamassassin/detection_gap.csv`.
+
+### ML detectors (Logistic Regression, XGBoost, DistilBERT)
+
+Each ML detector has its own subdirectory under `detection/` with `train.py`, `eval.py`, and a README. All three follow the same interface: `--mode baseline` trains on real phishing only, `--mode augmented` trains on real + synthetic phishing (the Phase 4 experiment).
+
+```bash
+# Logistic Regression (~30s local)
+python detection/logistic_regression/train.py --mode baseline
+python detection/logistic_regression/eval.py  --mode baseline
+
+# XGBoost (~2 min local)
+python detection/xgboost/train.py --mode baseline
+python detection/xgboost/eval.py  --mode baseline
+
+# DistilBERT (~15 min on Colab GPU — see detection/distilbert/README.md)
+python detection/distilbert/train.py --mode baseline
+python detection/distilbert/eval.py  --mode baseline
+```
+
+Each run writes four result CSVs to `results/<detector>/baseline/`. Swap `baseline` for `augmented` to produce the Phase 4 results.
+
+**Key results on real test set (baseline):**
+
+| Detector | Real F1 | Synth detection | Detection gap |
+|---|---|---|---|
+| SpamAssassin (tuned) | 0.823 | 38.7% | 32.4 pts |
+| Logistic Regression | 0.988 | 88.8% | 9.2 pts |
+| XGBoost | 0.987 | 91.9% | 6.0 pts |
+| DistilBERT | 0.993 | 90.8% | 8.7 pts |
+
+Classical ML detectors are much more robust to AI-generated phishing than rule-based detection, but all three still have a measurable gap the Phase 4 experiment closes.
 
 ## Phase 4: Augmentation Experiment (Mitigation)
 
@@ -225,43 +263,87 @@ Splits the 457 synthetic emails 50/50 (stratified by method × sophistication) i
 
 ### Step 2: Retrain and Evaluate (per ML detector)
 
-For LR, XGBoost, and DistilBERT:
-1. Train a **baseline** model on `emails_clean.csv` (split='train')
-2. Train an **augmented** model on `emails_augmented_train.csv` (all rows)
-Evaluate both on `synthetic_split.csv` filtered to `aug_split == 'test'` (primary) and `emails_clean.csv` filtered to `split == 'test'` (sanity check).
+For each ML detector, train both `--mode baseline` and `--mode augmented`, then evaluate both on the real test set and on the held-out synthetic test set:
+
+```bash
+python detection/logistic_regression/train.py --mode augmented
+python detection/logistic_regression/eval.py  --mode augmented
+
+python detection/xgboost/train.py --mode augmented
+python detection/xgboost/eval.py  --mode augmented
+
+python detection/distilbert/train.py --mode augmented
+python detection/distilbert/eval.py  --mode augmented
+```
+
+Each `eval.py` automatically evaluates against the right synthetic set (full 457-row `synthetic_phishing_clean.csv` for baseline; 229-row held-out subset of `synthetic_split.csv` for augmented — enforced by the scripts to prevent leakage).
 
 SpamAssassin is rule-based so it isn't retrained — the augmentation experiment applies only to the ML detectors.
 
 ### Step 3: Cross-Detector Analysis
 
-(Not yet written) Aggregates all four detectors' `detection_gap.csv` files into the headline cross-detector comparison table and the before/after augmentation table.
+Run the analysis notebook to produce the headline table and publication-quality figures:
+
+```bash
+jupyter lab notebooks/02_results_analysis.ipynb
+# Run All
+```
+
+The notebook reads every detector's `baseline.csv` and `detection_gap.csv`, produces 5 figures (saved to `results/figures/`), and writes `results/headline_table.csv` — the cross-detector summary that goes in the writeup.
+
+**Augmentation results:**
+
+| Detector | Synth detection (baseline → augmented) | Real F1 (baseline → augmented) |
+|---|---|---|
+| Logistic Regression | 88.8% → 97.4% | 0.988 → 0.987 |
+| XGBoost | 91.9% → 99.1% | 0.987 → 0.983 |
+| DistilBERT | 90.8% → 100.0% | 0.993 → 0.992 |
+
+Augmentation with ~5.6% synthetic phishing in training closes the detection gap across all three ML detectors with negligible impact on real-phishing detection.
 
 ## Project Structure
 
 ```
 ├── data/
 │   ├── raw/                    # Raw downloaded datasets (gitignored)
-│   └── processed/              # Cleaned CSVs (gitignored)
-├── detection/                  # Classifier scripts + saved models
+│   └── processed/              # Cleaned CSVs
+├── detection/                  # Classifier scripts
 │   ├── README.md               # Shared conventions for all detectors
-│   ├── spamassassin/           # Rule-based detector (done)
+│   ├── _shared.py              # Shared data-loading / metrics / writers
+│   ├── spamassassin/           # Rule-based detector
 │   │   ├── README.md
 │   │   ├── setup.md
-│   │   ├── eval.py
-│   │   └── gap.py
-│   ├── logistic_regression/    # (teammate)
-│   ├── xgboost/                # (teammate)
-│   └── distilbert/             # (teammate)
-├── generation/                 # Prompt templates and generation configs
+│   │   ├── eval.py             # Scores emails via spamd
+│   │   └── gap.py              # Tunes threshold, writes result CSVs
+│   ├── logistic_regression/    # TF-IDF + LR
+│   │   ├── README.md
+│   │   ├── train.py
+│   │   └── eval.py
+│   ├── xgboost/                # TF-IDF + XGBoost
+│   │   ├── README.md
+│   │   ├── train.py
+│   │   └── eval.py
+│   └── distilbert/             # Fine-tuned DistilBERT (Colab)
+│       ├── README.md
+│       ├── train.py
+│       └── eval.py
+├── generation/                 # Phase 2 prompt templates
 │   └── prompts/
 │       ├── zero_shot.json
 │       ├── few_shot.json
 │       └── rephrasing.json
 ├── notebooks/
-│   ├── 01_eda.ipynb            # Exploratory data analysis
-│   └── 02_Baseline_Logistic.ipynb  # LR baseline (teammate)
+│   ├── 01_eda.ipynb            # Phase 1 exploratory analysis
+│   └── 02_results_analysis.ipynb  # Phase 3/4 cross-detector analysis
 ├── results/
-│   └── spamassassin/           # Phase 3 SpamAssassin results
+│   ├── spamassassin/           # 4 result CSVs (single mode)
+│   ├── logistic_regression/
+│   │   ├── baseline/           # 4 result CSVs per mode
+│   │   └── augmented/
+│   ├── xgboost/{baseline,augmented}/
+│   ├── distilbert/{baseline,augmented}/
+│   ├── figures/                # PNGs produced by the results notebook
+│   └── headline_table.csv      # Cross-detector summary
 ├── scripts/
 │   ├── email_utils.py          # Shared email parsing utilities
 │   ├── parse_nazario.py

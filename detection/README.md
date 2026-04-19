@@ -7,7 +7,7 @@ Four detectors are evaluated in this project, each in its own subdirectory:
 | Logistic Regression (TF-IDF) | classical ML | `logistic_regression/` | ~30s local |
 | XGBoost (TF-IDF) | classical ML | `xgboost/` | ~2 min local |
 | DistilBERT (fine-tuned) | transformer | `distilbert/` | ~15 min Colab GPU |
-| SpamAssassin | rule-based | `spamassassin/` | ~5 min + Docker |
+| SpamAssassin | rule-based | `spamassassin/` | ~30 min + Docker (scores train+test+synth) |
 
 Each ML detector (LR, XGBoost, DistilBERT) produces **two models**:
 - `baseline` — trained on real phishing only (Phase 3)
@@ -75,18 +75,24 @@ Detection utilities (data loading, text cleaning, metrics, result writers) live 
 Assuming `data/processed/emails_clean.csv`, `synthetic_phishing_clean.csv`, `synthetic_split.csv`, and `emails_augmented_train.csv` already exist:
 
 ```bash
-# SpamAssassin (done — re-run if needed)
+# SpamAssassin (tuned-threshold workflow)
 python detection/spamassassin/eval.py \
-    --input data/processed/emails_clean.csv \
-    --output results/spamassassin/real_test.csv --split test
+    --input  data/processed/emails_clean.csv \
+    --output results/spamassassin/real_train.csv \
+    --split  train                           # needed to tune the threshold
 python detection/spamassassin/eval.py \
-    --input data/processed/synthetic_phishing_clean.csv \
+    --input  data/processed/emails_clean.csv \
+    --output results/spamassassin/real_test.csv \
+    --split  test
+python detection/spamassassin/eval.py \
+    --input  data/processed/synthetic_phishing_clean.csv \
     --output results/spamassassin/synthetic.csv
 python detection/spamassassin/gap.py \
-    --real results/spamassassin/real_test.csv \
+    --train     results/spamassassin/real_train.csv \
+    --real      results/spamassassin/real_test.csv \
     --synthetic results/spamassassin/synthetic.csv \
     --synthetic-meta data/processed/synthetic_phishing_clean.csv \
-    --outdir results/spamassassin/
+    --outdir    results/spamassassin/
 
 # Logistic Regression
 python detection/logistic_regression/train.py --mode baseline
