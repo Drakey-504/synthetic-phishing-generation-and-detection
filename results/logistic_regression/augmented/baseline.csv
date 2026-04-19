@@ -1,0 +1,2 @@
+detector,threshold,n,tp,fp,tn,fn,accuracy,precision,recall,f1
+logistic_regression,0.5,2647,948,7,1673,19,0.9901775595013222,0.9926701570680628,0.9803516028955532,0.9864724245577523
