@@ -1,0 +1,8 @@
+detector,mode,n_real_test,real_f1,real_recall,n_synth,synth_caught,synth_detection_rate,detection_gap
+SpamAssassin,baseline,2647,0.6722,0.5067,457,62,0.1357,0.3711
+Logistic Regression,baseline,2647,0.9875,0.9804,457,406,0.8884,0.0919
+Logistic Regression,augmented,2647,0.9865,0.9804,229,223,0.9738,0.0066
+XGBoost,baseline,2647,0.987,0.9793,457,420,0.919,0.0603
+XGBoost,augmented,2647,0.9828,0.9741,229,227,0.9913,-0.0171
+DistilBERT,baseline,2647,0.9933,0.9948,457,415,0.9081,0.0867
+DistilBERT,augmented,2647,0.9922,0.9928,229,229,1.0,-0.0072
