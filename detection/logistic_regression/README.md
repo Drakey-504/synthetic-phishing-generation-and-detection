@@ -35,7 +35,6 @@ Each pair takes about 30 seconds on a laptop.
 - Decision threshold: 0.5 (default)
 - Text cleaning (before TF-IDF): lowercase, URL/EMAIL tokenization, whitespace collapse
 
-Matches Sathwika's original baseline notebook configuration.
 
 ## Eval-target difference between modes
 
