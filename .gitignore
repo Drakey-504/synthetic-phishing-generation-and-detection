@@ -1,1 +1,7 @@
 data/raw/
+models/
+__pycache__/
+*.pyc
+.DS_Store
+.idea/
+results/*/hf_trainer_workdir/
