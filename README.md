@@ -1,5 +1,59 @@
-# synthetic-phishing-generation-and-detection
-Synthetic Phishing Generation and Detection Project for AI Applications in Information Security, Spring 2026
+# Can LLM-Generated Phishing Evade Today's Detectors?
+
+Attackers can now generate polished phishing emails with a local LLM in seconds. This project measures how well four detectors (rule-based, classical ML, and transformer) hold up against LLM-generated phishing, then tests whether a small amount of synthetic training data closes the gap.
+
+**Course:** 14-795 AI Applications in Information Security, Carnegie Mellon University, Spring 2026  
+**Team:** Karthik Chakkalakal, Sathwika Manda
+
+## Key findings
+
+- **Rule-based filtering breaks down.** SpamAssassin (threshold tuned on real training data) catches 71.2% of real phishing but only 38.7% of LLM-generated phishing, a 32-point gap. It catches 18.1% of few-shot emails and 14.0% of spear-phishing.
+- **ML detectors are more robust, but spear-phishing is their blind spot.** Logistic Regression, XGBoost, and DistilBERT reach F1 of 0.987–0.993 on real phishing and catch 89–92% of synthetic phishing overall (a 6–9 point gap). On targeted spear-phishing they catch only 49–64%. Colleague-impersonation (0–20% caught) and CEO wire-transfer (0–60%) are the hardest scenarios.
+- **A little synthetic data closes the gap.** Adding 228 synthetic emails (~5.6% of phishing training examples) raises detection on a held-out set of 229 synthetic emails from 90–93% to 97–100%, and spear-phishing detection from 54–68% to 88–100%. Real-phishing F1 drops by less than 0.005.
+
+| Detector | Real-phishing F1 | Synthetic caught (all 457) | Spear-phishing caught | Held-out 229: baseline → augmented |
+|---|---|---|---|---|
+| SpamAssassin (tuned) | 0.823 | 38.7% | 14.0% | n/a (rule-based) |
+| Logistic Regression | 0.988 | 88.8% | 49.0% | 90.0% → 97.4% |
+| XGBoost | 0.987 | 91.9% | 64.0% | 92.6% → 99.1% |
+| DistilBERT | 0.993 | 90.8% | 60.0% | 91.3% → 100.0% |
+
+All figures come from the course-era result files in `results/`. The held-out baseline column uses the baseline models' saved per-email predictions, restricted to the same 229 emails the augmented models were scored on, so the comparison is like-for-like.
+
+## What we built
+
+1. **Data pipeline:** parsers for four corpora (Nazario and Nigerian-fraud phishing; Enron and SpamAssassin ham), preprocessing that strips leaked `X-Spam-*` and mail-client headers, deduplicates, and filters; an EDA check for label-revealing terms; and a stratified 80/20 split (13,233 emails).
+2. **Synthetic generation:** Llama 3 8B via Ollama produces 457 phishing emails across three attacker levels: zero-shot and few-shot emails cover 13 scenarios (8 bulk, 5 spear-phishing), and rephrasing rewrites 200 real phishing emails. A cleanup step then removes LLM meta-commentary and fills template placeholders.
+3. **Detection:** SpamAssassin in Docker, queried over the SPAMC protocol from Python, with an F1-tuned threshold; TF-IDF Logistic Regression and XGBoost; fine-tuned DistilBERT.
+4. **Augmentation experiment:** synthetic emails split 50/50 (stratified by method and sophistication), with the eval scripts enforcing that augmented models are only scored on the held-out half.
+
+## Follow-up after the course (October 2026)
+
+*Added after the course; not part of the submitted project.*
+
+**Why check this?** The phishing class mixes two sources. Most of it (Nigerian fraud, about two-thirds) is from the same early-2000s era as the legitimate emails (Enron and SpamAssassin, ~2000–2002), but the Nazario phishing (about a third) is from 2020–2025 and was collected at a single inbox, `jose@monkey.org`, which about 70% of those emails name in the text. So some words separate the classes only because of where the emails came from: "monkey" appears in over 1,000 phishing emails and about 30 legitimate ones, and "2023" and "2024" appear only in Nazario phishing. A model can score well by spotting words like these without learning anything about phishing, and they would be useless on real mail.
+
+**Result.** These words do rank among the top Logistic Regression and XGBoost features ("enron" is #3 for Logistic Regression, "monkey" #5 for XGBoost; full list in `results/dataset_artifact_check.csv`). Retraining both models with them removed (`scripts/check_dataset_artifacts.py`) changes real F1 by ≤ 0.005 and synthetic detection by ≤ 0.5 points, so the models are relying on real phishing signal and the results above hold. DistilBERT was not re-tested.
+
+**Remaining limitation.** The legitimate mail is about two decades old, so real-test scores likely overstate performance on modern inboxes.
+
+## Contributions
+
+**Karthik Chakkalakal** ([@Drakey-504](https://github.com/Drakey-504))
+- Built the data pipeline: dataset parsers, preprocessing and header-leakage removal, train/test split, and EDA
+- Designed and ran the synthetic generation pipeline (prompt templates, generation, and cleanup)
+- Built the SpamAssassin evaluation: Docker spamd, SPAMC client, threshold tuning, and per-method/per-sophistication gap analysis
+- Designed the augmentation experiment and its leakage-safe held-out split
+- Refactored the ML detectors into a shared train/eval interface (`--mode baseline|augmented`), ran the experiments, and produced the cross-detector analysis and figures
+
+**Sathwika Manda** ([@sathwikamanda](https://github.com/sathwikamanda))
+- Built and trained the initial Logistic Regression, XGBoost, and DistilBERT models in Colab (`detection/02_Baseline_Logistic.ipynb`, `detection/03_XGBoost.ipynb`, `detection/04_DistilBERT.ipynb`); the shared detector scripts reuse her text cleaning, TF-IDF, Logistic Regression, XGBoost, and DistilBERT training settings
+
+## Stack
+
+Python · Ollama (Llama 3 8B) · SpamAssassin (Docker) · scikit-learn · XGBoost · PyTorch / Hugging Face Transformers · pandas · Jupyter · Google Colab (T4 GPU)
+
+---
 
 ## Setup
 
@@ -64,13 +118,6 @@ All raw datasets are stored in `data/raw/` and excluded from version control via
 - Gives ~3,900 clean legitimate emails to supplement Enron
 - Note: strip any leftover SpamAssassin headers (e.g., `X-Spam-Status`) during preprocessing
 - Save to `data/raw/spamassassin/`
-
-### Benchmark Dataset
-
-**Opara et al. GPT-4o Phishing Dataset**
-- Source: https://www.kaggle.com/datasets/guchiopara/ai-generated-emails
-- Used as a pre-built benchmark to compare our synthetic emails against
-- Save to `data/raw/opara/`
 
 ## Phase 1: Data Pipeline
 
@@ -140,7 +187,7 @@ Produces 460 synthetic phishing emails:
 - **few_shot** (130): prompt includes real phishing examples — simulates an attacker with access to a phishing corpus
 - **rephrasing** (200): takes real Nazario/Nigerian emails and has the LLM rewrite them professionally — simulates an attacker polishing proven phishing
 
-Bulk and spear-phishing variants are generated across 13 scenarios (account_suspension, ceo_wire_transfer, document_share, hr_benefits, linkedin_recruiter, password_reset, etc.).
+Zero-shot and few-shot emails cover 13 scenarios: 8 bulk (account_suspension, password_reset, document_share, etc.) and 5 spear-phishing (ceo_wire_transfer, colleague_impersonation, hr_benefits, linkedin_recruiter, vendor_impersonation).
 
 **Output:** `data/processed/synthetic_phishing.csv` (460 rows)
 
@@ -161,16 +208,16 @@ python scripts/cleanup_synthetic_phishing.py \
 
 Four detectors are evaluated on both the real test set (baseline) and the synthetic phishing set (detection gap). Each detector lives in its own subdirectory under `detection/` and writes standardized output CSVs to `results/<detector>/`.
 
-| Detector | Type | Status |
-|---|---|---|
-| SpamAssassin | rule-based | done |
-| Logistic Regression (TF-IDF) | classical ML | done |
-| XGBoost (TF-IDF) | classical ML | done |
-| DistilBERT (fine-tuned) | transformer | done |
+| Detector | Type |
+|---|---|
+| SpamAssassin | rule-based |
+| Logistic Regression (TF-IDF) | classical ML |
+| XGBoost (TF-IDF) | classical ML |
+| DistilBERT (fine-tuned) | transformer |
 
 See `detection/README.md` for shared conventions (output filenames, column layouts) that all four detectors follow.
 
-### SpamAssassin (completed)
+### SpamAssassin
 
 Runs SpamAssassin in Docker, communicates via the SPAMC protocol over TCP directly from Python (no local `spamc` binary needed). SA's default threshold of 5.0 is designed for bulk spam and significantly under-recalls on phishing, so we tune the decision threshold on the real training set (F1-optimal) to give SA a fair comparison with the ML detectors.
 
@@ -210,7 +257,7 @@ python detection/spamassassin/gap.py \
 Full setup instructions: `detection/spamassassin/setup.md`.
 Run instructions: `detection/spamassassin/README.md`.
 
-**Key result:** at the tuned threshold (1.7), SpamAssassin catches 71.2% of real phishing but only 38.7% of synthetic phishing — a 32-point detection gap. Few-shot synthetic phishing is hardest to detect (18.1% caught), followed by zero-shot (27.7%); rephrasing-based synthetic catches 59.0% because vocabulary from real source emails survives the rewrite. Spear-phishing variants evade SA most (14.0% caught). Full breakdown in `results/spamassassin/detection_gap.csv`.
+**Key result:** at the tuned threshold (1.7), SpamAssassin catches 71.2% of real phishing but only 38.7% of synthetic phishing — a 32-point detection gap. Few-shot synthetic phishing is hardest to detect (18.1% caught), followed by zero-shot (27.7%); rephrasing-based synthetic catches 59.0%, likely because vocabulary from the real source emails survives the rewrite. Spear-phishing variants evade SA most (14.0% caught). Full breakdown in `results/spamassassin/detection_gap.csv`.
 
 ### ML detectors (Logistic Regression, XGBoost, DistilBERT)
 
@@ -241,7 +288,7 @@ Each run writes four result CSVs to `results/<detector>/baseline/`. Swap `baseli
 | XGBoost | 0.987 | 91.9% | 6.0 pts |
 | DistilBERT | 0.993 | 90.8% | 8.7 pts |
 
-Classical ML detectors are much more robust to AI-generated phishing than rule-based detection, but all three still have a measurable gap the Phase 4 experiment closes.
+The ML detectors (including DistilBERT) are much more robust to AI-generated phishing than rule-based detection, but all three still have a measurable gap the Phase 4 experiment closes.
 
 ## Phase 4: Augmentation Experiment (Mitigation)
 
@@ -293,11 +340,13 @@ The notebook reads every detector's `baseline.csv` and `detection_gap.csv`, prod
 
 **Augmentation results:**
 
-| Detector | Synth detection (baseline → augmented) | Real F1 (baseline → augmented) |
-|---|---|---|
-| Logistic Regression | 88.8% → 97.4% | 0.988 → 0.987 |
-| XGBoost | 91.9% → 99.1% | 0.987 → 0.983 |
-| DistilBERT | 90.8% → 100.0% | 0.993 → 0.992 |
+The detection columns compare the baseline and augmented models on the same 229 held-out synthetic emails; real F1 is on the real test set.
+
+| Detector | Synth detection (baseline → augmented) | Spear-phishing (baseline → augmented) | Real F1 (baseline → augmented) |
+|---|---|---|---|
+| Logistic Regression | 90.0% → 97.4% | 54% → 88% | 0.988 → 0.986 |
+| XGBoost | 92.6% → 99.1% | 68% → 96% | 0.987 → 0.983 |
+| DistilBERT | 91.3% → 100.0% | 62% → 100% | 0.993 → 0.992 |
 
 Augmentation with ~5.6% synthetic phishing in training closes the detection gap across all three ML detectors with negligible impact on real-phishing detection.
 
@@ -309,6 +358,9 @@ Augmentation with ~5.6% synthetic phishing in training closes the detection gap 
 │   └── processed/              # Cleaned CSVs
 ├── detection/                  # Classifier scripts
 │   ├── README.md               # Shared conventions for all detectors
+│   ├── 02_Baseline_Logistic.ipynb  # Original Colab baselines (Sathwika)
+│   ├── 03_XGBoost.ipynb
+│   ├── 04_DistilBERT.ipynb
 │   ├── _shared.py              # Shared data-loading / metrics / writers
 │   ├── spamassassin/           # Rule-based detector
 │   │   ├── README.md
@@ -336,14 +388,15 @@ Augmentation with ~5.6% synthetic phishing in training closes the detection gap 
 │   ├── 01_eda.ipynb            # Phase 1 exploratory analysis
 │   └── 02_results_analysis.ipynb  # Phase 3/4 cross-detector analysis
 ├── results/
-│   ├── spamassassin/           # 4 result CSVs (single mode)
+│   ├── spamassassin/           # 5 result CSVs (incl. real_train.csv)
 │   ├── logistic_regression/
 │   │   ├── baseline/           # 4 result CSVs per mode
 │   │   └── augmented/
 │   ├── xgboost/{baseline,augmented}/
 │   ├── distilbert/{baseline,augmented}/
 │   ├── figures/                # PNGs produced by the results notebook
-│   └── headline_table.csv      # Cross-detector summary
+│   ├── headline_table.csv      # Cross-detector summary
+│   └── dataset_artifact_check.csv # Dataset-artifact check output
 ├── scripts/
 │   ├── email_utils.py          # Shared email parsing utilities
 │   ├── parse_nazario.py
@@ -355,7 +408,8 @@ Augmentation with ~5.6% synthetic phishing in training closes the detection gap 
 │   ├── split_data.py
 │   ├── generate_phishing.py            # Phase 2 generation
 │   ├── cleanup_synthetic_phishing.py   # Phase 2 cleanup
-│   └── prepare_augmentation.py         # Phase 4 augmentation data prep
+│   ├── prepare_augmentation.py         # Phase 4 augmentation data prep
+│   └── check_dataset_artifacts.py      # Dataset-artifact check
 ├── .gitignore
 ├── environment.yml             # Conda environment specification
 └── README.md
@@ -389,7 +443,7 @@ After running the full pipeline:
 | Method | Count | Description |
 |---|---|---|
 | zero_shot | 130 | 80 bulk + 50 spear, no examples in prompt |
-| few_shot | 127 | 80 bulk + 47 spear, prompt includes real phishing examples |
+| few_shot | 127 | 77 bulk + 50 spear, prompt includes real phishing examples |
 | rephrasing | 200 | 80 Nazario + 120 Nigerian sources, rewritten by LLM |
 | **Total** | **457** | |
 

@@ -1,0 +1,5 @@
+detector,artifact_words,real_f1,real_recall,synth_caught,zero_shot,few_shot,rephrasing,spear,gap,artifact_words_in_top25
+logistic_regression,kept,0.9875,0.9804,0.8884,0.769,0.835,1.0,0.49,0.0919,enron (#3); 2025 (#4); 2023 (#6); monkey (#7); 2024 (#8); 2002 (#11); 2001 (#13); monkey org (#16); jose (#20)
+logistic_regression,removed,0.9849,0.9772,0.884,0.769,0.819,1.0,0.47,0.0932,
+xgboost,kept,0.987,0.9793,0.919,0.815,0.906,0.995,0.64,0.0603,monkey (#5); monkey org (#12); enron (#14); 2002 (#15); jose (#25)
+xgboost,removed,0.9823,0.9741,0.9168,0.815,0.898,0.995,0.63,0.0573,
